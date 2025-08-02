@@ -1,5 +1,5 @@
 {
-  "name": "astro-llm-chat",
+  "name": "lilis-llm-chat",
   "type": "module",
   "version": "1.0.0",
   "main": "index.js",
@@ -15,7 +15,7 @@
   "keywords": [],
   "author": "L1lith",
   "license": "ESMIT",
-  "description": "",
+  "description": "An LLM Chat UI by Lili",
   "nwbuild": {
     "mode": "build",
     "glob": false,
@@ -30,9 +30,16 @@
       "icon": "./NWJS/llm-chat-logo.ico"
     }
   },
+  "icons": {
+    "256": "favicon.png"
+  },
   "devDependencies": {
     "astro": "^5.12.8",
     "nw": "^0.101.2",
     "nw-builder": "^4.13.16"
+  },
+  "dependencies": {
+    "@astrojs/solid-js": "^5.1.0",
+    "solid-js": "^1.9.7"
   }
 }
