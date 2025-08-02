@@ -1,0 +1,38 @@
+{
+  "name": "astro-llm-chat",
+  "type": "module",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "npm run build:nwprep && nw dist",
+    "dev": "astro dev",
+    "build:nwprep": "node ./NWJS/prepNW.js && astro build && node ./NWJS/buildNW.js",
+    "build": "npm run build:nwprep && node ./NWJS/runBuilder.js",
+    "preview": "astro preview",
+    "astro": "astro",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "L1lith",
+  "license": "ESMIT",
+  "description": "",
+  "nwbuild": {
+    "mode": "build",
+    "glob": false,
+    "platform": "win",
+    "arch": "x64",
+    "flavor": "sdk",
+    "cacheDir": "./node_modules/nw",
+    "srcDir": "./dist",
+    "outDir": "./bundle",
+    "logLevel": "error",
+    "app": {
+      "icon": "./NWJS/llm-chat-logo.ico"
+    }
+  },
+  "devDependencies": {
+    "astro": "^5.12.8",
+    "nw": "^0.101.2",
+    "nw-builder": "^4.13.16"
+  }
+}
