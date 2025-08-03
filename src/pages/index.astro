@@ -1,5 +1,7 @@
 ---
-
+import Chat from '../components/Chat.jsx'
+import "../styles/base.scss"
+import "../styles/index.scss"
 ---
 
 <html lang="en">
@@ -11,7 +13,8 @@
 		<meta name="viewport" content="width=device-width" />
 		<title>Lili's LLM Chat</title>
 	</head>
-	<body>
-		<h1>Astro</h1>
+	<body class="home">
+        <h1>Lili's LLM Chat</h1>
+		<Chat client:load/>
 	</body>
 </html>

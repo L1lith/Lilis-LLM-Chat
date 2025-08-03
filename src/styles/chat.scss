@@ -1,0 +1,19 @@
+.chat {
+    .messages {
+        display: flex;
+        flex-direction: column;
+        .message {
+            &.ai {
+                align-self: flex-end;
+            }
+        }
+        .prompt {
+            align-self: stretch;
+            display: flex;
+            flex-direction: row;
+            input {
+                flex-grow: 1;
+            }
+        }
+    }
+}
