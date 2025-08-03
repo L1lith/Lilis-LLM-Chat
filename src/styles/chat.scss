@@ -2,15 +2,23 @@
   display: flex;
   flex-direction: column;
   .popup {
+    h1 {
+      text-shadow: 1vmin 1vmin 0.5vmin #00000054;
+      text-decoration: underline;
+      font-weight: bold;
+    }
     position:absolute;
     z-index: 10;
     top: 5vmin;
     left: 5vmin;
-    width: calc(100vw - 10vmin);
-    height: calc(100vh - 10vmin);
+    width: calc(100vw - 20vmin);
+    height: calc(100vh - 20vmin);
     background-color: #857898;
+    padding: 5vmin;
+    overflow: auto;
     .close {
-      position: absolute;
+      position: fixed;
+      z-index: 20;
       top: 5vmin;
       right: 5vmin;
       cursor: pointer;
