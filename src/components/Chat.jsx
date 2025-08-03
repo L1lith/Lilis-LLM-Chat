@@ -10,7 +10,7 @@ export default function Chat() {
 
     const handleSubmit = async e => {
         e.preventDefault()
-        setMessages(messages().concat([{from: 'user', content: input.value}]))
+        setMessages(messages().concat([{from: 'User', content: input.value}]))
         const prompt = input.value.trim()
         if (!prompt) return
         input.value=''
@@ -20,11 +20,11 @@ export default function Chat() {
             AIResponse = await getAIResponse()
         } catch(err) {
             console.error(err)
-            setMessages(messages().concat([{from: 'system', content: String(err)}]))
+            setMessages(messages().concat([{from: 'System', content: String(err)}]))
             setAwaitingResponse(false)
             return
         }
-        setMessages(messages().concat([{from: 'ai', content: AIResponse}]))
+        setMessages(messages().concat([{from: 'AI', content: AIResponse}]))
         setAwaitingResponse(false)
     }
     const getAIResponse = async () => {
