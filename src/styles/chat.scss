@@ -51,6 +51,8 @@
     }
   }
   .prompter {
+    margin-top: 2.5vmin;
+    z-index: 1;
     align-self: stretch;
     display: flex;
     flex-direction: row;

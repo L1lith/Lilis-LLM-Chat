@@ -1,5 +1,5 @@
 import MessageHistory from "./MessageHistory"
-import { createSignal } from "solid-js"
+import { createSignal, onMount } from "solid-js"
 import Send from '../icons/send.svg?raw'
 import "../styles/chat.scss"
 
@@ -8,6 +8,12 @@ export default function Chat() {
     let submitButton = null
     const [messages, setMessages] = createSignal([])
     const [awaitingResponse, setAwaitingResponse] = createSignal(false)
+
+    onMount(()=>{
+        window.onfocus = function() {
+            input.focus()
+        };
+    })
 
     const handleSubmit = async e => {
         e.preventDefault()
@@ -23,10 +29,12 @@ export default function Chat() {
             console.error(err)
             setMessages(messages().concat([{from: 'System', content: String(err)}]))
             setAwaitingResponse(false)
+            input.focus()
             return
         }
         setMessages(messages().concat([{from: 'AI', content: AIResponse}]))
         setAwaitingResponse(false)
+        input.focus()
     }
     const getAIResponse = async () => {
         await new Promise((res)=>setTimeout(res, 1500))
