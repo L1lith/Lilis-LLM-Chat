@@ -10,10 +10,15 @@
       position: absolute;
       top: 0;
       left: 0;
-      width: 100%;
+      width: calc(100% - 4vw);
+      padding-right: 4vw;
       height: 100%;
       overflow-y: auto;
       overflow-x: hidden;
+      &::-webkit-scrollbar-track{
+        background: transparent !important;
+        background-color: transparent !important;
+      }
     }
     .message {
       width: fit-content;
@@ -29,9 +34,12 @@
       .author {
         font-size: 1.5em;
         text-decoration: underline;
+        color: #8e92ff;
+        margin-bottom: 0.5em;
+        font-weight: bold;
       }
       .content {
-        white-space: pre;
+        white-space: pre-wrap;
       }
       &.user {
         align-items: flex-start;

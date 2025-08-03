@@ -7,6 +7,7 @@
     width: calc(100vw - 10vmin);
     padding: 5vmin;
     & > h1 {
+        user-select: none;
         margin-bottom: 0.5em;
     }
     .chat {

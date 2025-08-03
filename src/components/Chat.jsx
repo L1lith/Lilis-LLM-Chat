@@ -14,17 +14,21 @@ export default function Chat() {
             input.focus()
     };
     onMount(()=>{
-        window.addEventListener('focus', autoFocus)
+        if (typeof global?.window !== 'undefined') {
+            window.addEventListener('focus', autoFocus)
+        }
     })
     onCleanup(()=>{
-        window.removeEventListener('focus', autoFocus)
+        if (typeof global?.window !== 'undefined') {
+            window.removeEventListener('focus', autoFocus)
+        }
     })
 
     const handleSubmit = async e => {
         e.preventDefault()
         setMessages(messages().concat([{from: 'User', content: input.value}]))
         const prompt = input.value.trim()
-        if (!prompt) return
+        if (!prompt.trim()) return
         input.value=''
         setAwaitingResponse(true)
         let AIResponse
