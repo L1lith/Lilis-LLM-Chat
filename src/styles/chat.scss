@@ -1,6 +1,26 @@
 .chat {
   display: flex;
   flex-direction: column;
+  .inbox, .settings{
+    top: 6vmin;
+    transform: translateY(-50%);
+    position: absolute;
+    cursor: pointer;
+    z-index: 2;
+    width: 6vmin;
+    filter: drop-shadow(1vmin 1vmin 3px transparent);
+    &:hover {
+        filter: drop-shadow(1vmin 1vmin 3px black);
+        transition: filter 0.2s ease-in;
+    }
+    transition: filter 1s ease-in;
+  }
+  .inbox {
+    left: 4vmin;
+  }
+  .settings {
+    right: 4vmin;
+  }
   .messages {
     flex-grow: 1;
     position: relative;
