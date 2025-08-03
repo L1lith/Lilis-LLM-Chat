@@ -30,9 +30,9 @@ export default function Chat() {
 
     const handleSubmit = async e => {
         e.preventDefault()
-        setMessages(messages().concat([{from: 'User', content: input.value}]))
         const prompt = input.value.trim()
         if (!prompt.trim()) return
+        setMessages(messages().concat([{from: 'User', content: input.value}]))
         input.value=''
         autoAdjustInputHeight()
         setAwaitingResponse(true)

@@ -93,6 +93,12 @@
       flex-grow: 1;
       color: inherit;
       border-radius: 1em;
+      &:focus {
+        outline: 0.25vmin solid #63488e;
+        transition: outline 0.2s ease-in;
+      }
+      outline: 0.25vmin solid transparent;
+      transition: outline 1s ease-in;
     }
     button[type="submit"] {
       cursor: pointer;
