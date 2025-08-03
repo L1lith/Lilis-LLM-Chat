@@ -1,6 +1,6 @@
 import { createEffect } from "solid-js"
 
-export default function MessageHistory(props) {
+export default function MessageList(props) {
     let inner = null
     createEffect(()=>{
         props.messages()

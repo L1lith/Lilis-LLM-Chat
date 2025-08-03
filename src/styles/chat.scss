@@ -1,6 +1,26 @@
 .chat {
   display: flex;
   flex-direction: column;
+  .popup {
+    position:absolute;
+    z-index: 10;
+    top: 5vmin;
+    left: 5vmin;
+    width: calc(100vw - 10vmin);
+    height: calc(100vh - 10vmin);
+    background-color: #857898;
+    .close {
+      position: absolute;
+      top: 5vmin;
+      right: 5vmin;
+      cursor: pointer;
+      svg {
+        fill: #eaeaea;
+        max-width: 8vmin;
+        max-height: 8vmin;
+      }
+    }
+  }
   .inbox, .settings{
     top: 6vmin;
     transform: translateY(-50%);

@@ -1,13 +1,17 @@
-import MessageHistory from "./MessageHistory"
+import MessageList from "./MessageList"
 import { createSignal, onCleanup, onMount } from "solid-js"
 import Send from '../icons/send.svg?raw'
-import Settings from '../icons/settings.svg?raw'
+import SettingsIcon from '../icons/settings.svg?raw'
+import cancel from '../icons/cancel.svg?raw'
 import Inbox from '../icons/inbox.svg?raw'
 import "../styles/chat.scss"
+import ConversationTray from "./ConversationTray"
+import Settings from "./Settings"
 
 export default function Chat() {
     let input = null
     let submitButton = null
+    const [activePopup, setActivePopup] = createSignal(null)
     const [chatUnfocused, setChatUnfocused] = createSignal(false)
     const [messages, setMessages] = createSignal([])
     const [awaitingResponse, setAwaitingResponse] = createSignal(false)
@@ -28,12 +32,16 @@ export default function Chat() {
             window.removeEventListener('focus', autoFocus)
         }
     })
+    const appendNewMessage = message => {
+        const newHistory = messages().concat([message])
+        setMessages(newHistory)
+    }
 
     const handleSubmit = async e => {
         e.preventDefault()
         const prompt = input.value.trim()
         if (!prompt.trim()) return
-        setMessages(messages().concat([{from: 'User', content: input.value}]))
+        appendNewMessage({from: 'User', content: input.value})
         input.value=''
         autoAdjustInputHeight()
         setAwaitingResponse(true)
@@ -42,12 +50,12 @@ export default function Chat() {
             AIResponse = await getAIResponse()
         } catch(err) {
             console.error(err)
-            setMessages(messages().concat([{from: 'System', content: String(err)}]))
+            appendNewMessage({from: 'System', content: String(err), type: 'error'})
             setAwaitingResponse(false)
             autoFocus()
             return
         }
-        setMessages(messages().concat([{from: 'AI', content: AIResponse}]))
+        appendNewMessage({from: 'AI', content: AIResponse})
         setAwaitingResponse(false)
         autoFocus()
     }
@@ -74,14 +82,33 @@ export default function Chat() {
     const autoAdjustInputHeight = ()=>{
         input.style.height = "";input.style.height = `min(calc(${input.scrollHeight}px - 2em), 30vh)`
     }
+    const renderPopup = ()=>{
+        if (activePopup() === null) return
+        let currentPopupElement = null
+        if (activePopup() === "conversationTray") {
+            currentPopupElement = (<ConversationTray/>)
+        } else if (activePopup() === "settings") {
+            currentPopupElement = (<Settings/>)
+        } else {
+            throw new Error("Invalid Popup Name")
+        }
+        return <span class="popup">
+            
+            <div onClick={()=>setActivePopup(null)} class="close" innerHTML={cancel}></div>
+            {currentPopupElement}
+        </span>
+    }
 
     return <div class="chat">
-        <div class="inbox" innerHTML={Inbox}></div>
-        <div class="settings" innerHTML={Settings}></div>
-        <MessageHistory messages={messages}/>
+        {activePopup() ? renderPopup() : (<>
+        <div onClick={()=>setActivePopup('conversationTray')} class="inbox" innerHTML={Inbox}></div>
+        <div onClick={()=>setActivePopup('settings')} class="settings" innerHTML={SettingsIcon}></div>
+        <MessageList messages={messages}/>
         <form class="prompter" onSubmit={handleSubmit}>
             <textarea onInput={autoAdjustInputHeight} onKeyDown={handleKeyDown} onKeyUp={handleKeyUp} class="prompt" disabled={awaitingResponse()} ref={input}/>
             <button ref={submitButton} type="submit"><div innerHTML={Send}></div></button>
         </form>
+        </>)}
+        
     </div>
 }
