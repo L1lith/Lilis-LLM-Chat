@@ -20,6 +20,7 @@ export default function Chat() {
     onMount(()=>{
         if (typeof global?.window !== 'undefined') {
             window.addEventListener('focus', autoFocus)
+            autoFocus()
         }
     })
     onCleanup(()=>{
