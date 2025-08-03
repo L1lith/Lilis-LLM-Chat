@@ -1,19 +1,29 @@
 .chat {
+    display: flex;
+    flex-direction: column;
     .messages {
+        flex-grow: 1;
         display: flex;
         flex-direction: column;
         .message {
+            &.user {
+                align-self: flex-start;
+            }
             &.ai {
                 align-self: flex-end;
             }
         }
-        .prompt {
-            align-self: stretch;
-            display: flex;
-            flex-direction: row;
-            input {
-                flex-grow: 1;
-            }
+    }
+    .prompter {
+        align-self: stretch;
+        display: flex;
+        flex-direction: row;
+        input {
+            flex-grow: 1;
+        }
+        button[type="submit"] {
+            border: none;
+            background: none;
         }
     }
 }
