@@ -4,8 +4,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "npm run build:nwprep && nw dist",
-    "dev": "astro dev",
+    "dev": "npm run build:nwprep && .\\SDK\\nw.exe ./dist",
+    "astro:defaultdev": "astro dev",
     "build:nwprep": "node ./NWJS/prepNW.js && astro build && node ./NWJS/buildNW.js",
     "build": "npm run build:nwprep && node ./NWJS/runBuilder.js",
     "preview": "astro preview",
@@ -22,7 +22,6 @@
     "platform": "win",
     "arch": "x64",
     "flavor": "sdk",
-    "cacheDir": "./node_modules/nw",
     "srcDir": "./dist",
     "outDir": "./bundle",
     "logLevel": "error",
@@ -35,7 +34,6 @@
   },
   "devDependencies": {
     "astro": "^5.12.8",
-    "nw": "^0.101.2",
     "nw-builder": "^4.13.16"
   },
   "dependencies": {

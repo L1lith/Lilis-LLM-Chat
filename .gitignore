@@ -1,11 +1,13 @@
 # build output
 dist/
 bundle/
+cache/
 # generated types
 .astro/
 
 # dependencies
 node_modules/
+SDK/
 
 # logs
 npm-debug.log*
