@@ -4,7 +4,7 @@ export default function MessageHistory(props) {
                     {props.messages().map(message => (
                 <div class={"message " + (message.from.toLowerCase())}>
                     <span class="author">{message.from}</span>
-                    <span class="content">{message.content}</span>
+                    <span class="content">{message.content.trim()}</span>
                 </div>
                 ))}
                 </div>

@@ -6,6 +6,9 @@
     height: calc(100vh - 10vmin);
     width: calc(100vw - 10vmin);
     padding: 5vmin;
+    & > h1 {
+        margin-bottom: 0.5em;
+    }
     .chat {
         flex-grow: 1;
         width: 100%;

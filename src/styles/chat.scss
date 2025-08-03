@@ -1,65 +1,74 @@
 .chat {
+  display: flex;
+  flex-direction: column;
+  .messages {
+    flex-grow: 1;
+    position: relative;
+    .inner {
+      display: flex;
+      flex-direction: column;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+    .message {
+      width: fit-content;
+      max-width: 80%;
+      display: flex;
+      flex-direction: column;
+      padding: 0.5em 1em;
+      background-color: #6a6177;
+      border-radius: 0.5em;
+      &:not(:last-child) {
+        margin-bottom: 2em;
+      }
+      .author {
+        font-size: 1.5em;
+        text-decoration: underline;
+      }
+      .content {
+        white-space: pre;
+      }
+      &.user {
+        align-items: flex-start;
+        align-self: flex-start;
+        .content {
+          text-align: left;
+        }
+      }
+      &.ai {
+        background-color: #18003c;
+        align-items: flex-end;
+        align-self: flex-end;
+        .content {
+          text-align: right;
+        }
+      }
+    }
+  }
+  .prompter {
+    align-self: stretch;
     display: flex;
-    flex-direction: column;
-    .messages {
-        flex-grow: 1;
-        position: relative;
-        .inner {
-            display: flex;
-            flex-direction: column;
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            overflow-y: auto;
-            overflow-x: hidden;
-        }
-        .message {
-            width: fit-content;
-            max-width: 80%;
-            display: flex;
-            flex-direction: column;
-            padding: 0.5em 1em;
-            background: #18003c;
-            border-radius: 0.5em;
-            &:not(:last-child) {
-                margin-bottom: 2em;
-            }
-            .author {
-                font-size: 1.5em;
-                text-decoration: underline;
-            }
-            &.user {
-                align-items:flex-start;
-                align-self: flex-start;
-                .content {
-                    text-align: left;
-                }
-            }
-            &.ai {
-                align-items: flex-end;
-                align-self: flex-end;
-                .content {
-                    text-align: right;
-                }
-            }
-        }
+    flex-direction: row;
+    textarea {
+      resize: none;
+      font-size: 1.25em;
+      padding: 1em;
+      background: linear-gradient(to top, #221732, transparent);
+      border: none;
+      flex-grow: 1;
+      color: inherit;
+      border-radius: 1em;
     }
-    .prompter {
-        align-self: stretch;
-        display: flex;
-        flex-direction: row;
-        input {
-            background: linear-gradient(to top, #221732, transparent);
-            border: none;
-            flex-grow: 1;
-            color: inherit;
-        }
-        button[type="submit"] {
-            margin-left: 2.5vmin;
-            border: none;
-            background: none;
-        }
+    button[type="submit"] {
+      cursor: pointer;
+      margin-left: 2.5vmin;
+      border: none;
+      background: none;
     }
+  }
 }
