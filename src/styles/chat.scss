@@ -6,6 +6,7 @@
       text-shadow: 1vmin 1vmin 0.5vmin #00000054;
       text-decoration: underline;
       font-weight: bold;
+      margin-bottom: 0.5em;
     }
     position:absolute;
     z-index: 10;
@@ -19,8 +20,8 @@
     .close {
       position: fixed;
       z-index: 20;
-      top: 5vmin;
-      right: 5vmin;
+      top: 7vmin;
+      right: 7vmin;
       cursor: pointer;
       svg {
         fill: #eaeaea;
@@ -75,7 +76,8 @@
       flex-direction: column;
       padding: 0.5em 1em;
       background-color: #6a6177;
-      border-radius: 0.5em;
+      border: 0.25em double #18003c;
+      border-radius: 0.25em;
       &:not(:last-child) {
         margin-bottom: 2em;
       }
@@ -98,6 +100,7 @@
       }
       &.ai {
         background-color: #18003c;
+        border-color: #6a6177;
         align-items: flex-end;
         align-self: flex-end;
         .content {
@@ -133,6 +136,12 @@
       margin-left: 2.5vmin;
       border: none;
       background: none;
+      filter: drop-shadow(1vmin 1vmin 3px transparent);
+      &:hover {
+          filter: drop-shadow(1vmin 1vmin 3px black);
+          transition: filter 0.2s ease-in;
+      }
+      transition: filter 1s ease-in;
     }
   }
 }
