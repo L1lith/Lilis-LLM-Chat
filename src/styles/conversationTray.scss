@@ -1,5 +1,22 @@
 .conversation-tray {
     .conversations {
         width: 100%;
+        .conversation {
+            .naming {
+                text-align: center;
+            }
+            .finish-rename {
+                svg {
+                    margin-bottom: -0.2em;
+                }
+            }
+            .rename, .finish-rename {
+                display: inline;
+                svg {
+                    max-width: 1em;
+                    max-height: 1em;
+                }
+            }
+        }
     }
 }

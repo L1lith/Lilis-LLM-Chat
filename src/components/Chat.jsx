@@ -7,6 +7,7 @@ import Inbox from '../icons/inbox.svg?raw'
 import "../styles/chat.scss"
 import ConversationTray from "./ConversationTray"
 import Settings from "./Settings"
+import saveConversation from '../functions/saveConversation'
 
 export default function Chat() {
     let input = null
@@ -41,12 +42,6 @@ export default function Chat() {
             window.removeEventListener('focus', autoFocus)
         }
     })
-    const saveConversation = conversation => {
-        const {join} = require('path')
-        const destination = join(conversationsDir, conversation.id + '.json')
-        const {writeFile} = require('fs/promises')
-        writeFile(destination, JSON.stringify(conversation)).catch(console.error)
-    }
     const appendNewMessage = message => {
         let newConvo = conversation()
         const crypto = require("crypto");
@@ -94,7 +89,7 @@ export default function Chat() {
         if (key === "Shift") {
             isShiftDown = true
         } else if (key === "Enter") {
-            if (!isShiftDown && !input.value.includes('\n')) {
+            if (!isShiftDown /*&& !input.value.includes('\n')*/) {
                 // Trigger Submit
                 submitButton.click()
             }
@@ -112,7 +107,7 @@ export default function Chat() {
         if (activePopup() === null) return
         let currentPopupElement = null
         if (activePopup() === "conversationTray") {
-            currentPopupElement = (<ConversationTray setConversation={setConversation} setActivePopup={setActivePopup} setMessages={setMessages}/>)
+            currentPopupElement = (<ConversationTray conversation={conversation} setConversation={setConversation} setActivePopup={setActivePopup} setMessages={setMessages}/>)
         } else if (activePopup() === "settings") {
             currentPopupElement = (<Settings/>)
         } else {
