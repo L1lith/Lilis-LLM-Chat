@@ -4,6 +4,7 @@ import Send from '../icons/send.svg?raw'
 import Refresh from '../icons/refresh.svg?raw'
 import SettingsIcon from '../icons/settings.svg?raw'
 import cancel from '../icons/cancel.svg?raw'
+import AIChat from '../icons/ai-chat.svg?raw'
 import Inbox from '../icons/inbox.svg?raw'
 import "../styles/chat.scss"
 import ConversationTray from "./ConversationTray"
@@ -17,6 +18,9 @@ export default function Chat() {
     const [messages, setMessages] = createSignal([])
     const [awaitingResponse, setAwaitingResponse] = createSignal(false)
     const [conversation, setConversation] = createSignal(null)
+    const [currentAPI, setCurrentAPI] = createSignal(null)
+    const [currentModel, setCurrentModel] = createSignal(null)
+    const [statusMessages, setStatusMessages] = createSignal([{type: 'info', message: 'There is a shark'}, {type: 'error', message: 'There is another shark'}])
 
     let conversationsDir = null
 
@@ -133,6 +137,16 @@ export default function Chat() {
         <div onClick={()=>setActivePopup('settings')} class="settings" innerHTML={SettingsIcon}></div>
         <MessageList messages={messages}/>
         <form class="prompter" onSubmit={handleSubmit}>
+            <ol class="status-messages">
+                    <For each={statusMessages()}>
+                        {statusMessage => (
+                            <li class={'status-message ' + (statusMessage.type || 'info')}>
+                                {statusMessage.message}
+                            </li>
+                        )}
+                    </For>
+            </ol>
+            <span className="toolbar left"><button class={"model-selector" + (currentAPI() === null || currentModel() === null ? ' error' : '')} innerHTML={AIChat}></button></span>
             <textarea onInput={autoAdjustInputHeight} onKeyDown={handleKeyDown} onKeyUp={handleKeyUp} class="prompt" disabled={awaitingResponse()} ref={input}/>
             <span className="toolbar right"><button innerHTML={Send} ref={submitButton} type="submit"/><button onClick={resetChat} innerHTML={Refresh}></button></span>
         </form>

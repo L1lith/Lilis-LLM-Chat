@@ -1,9 +1,11 @@
 import APIPicker from "./APIPicker";
 import "../styles/settings.scss"
+import getDataDirectory from "../functions/getDataDirectory";
 
 export default function Settings() {
     return <div class="settings-panel">
         <h1>Settings</h1>
-        <APIPicker/>        
+        <APIPicker/>
+        <button onClick={()=>require('open-file-explorer')(getDataDirectory())}>Open Data Directory</button>      
     </div>
 }

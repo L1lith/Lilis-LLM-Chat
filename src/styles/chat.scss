@@ -111,11 +111,35 @@
     }
   }
   .prompter {
+    position: relative;
     margin-top: 2.5vmin;
     z-index: 1;
     align-self: stretch;
     display: flex;
     flex-direction: row;
+    .status-messages {
+      display: flex;
+      flex-direction: column-reverse;
+      align-items: center;
+      position: absolute;
+      bottom: calc(100% + 2.5vmin);
+      width: 100%;
+      list-style: none;
+      .status-message {
+        padding: 0.2em;
+        border: 0.2em solid black;
+        background-color: white;
+        color: black;
+        padding-bottom: 0;
+        &:not(:first-child) {
+          margin-bottom: 0.5em;
+        }
+        &.error {
+          border-color: #ff006f;
+          color: #ff006f;
+        }
+      }
+    }
     textarea {
       resize: none;
       font-size: 1.25em;
@@ -139,11 +163,27 @@
       align-items: center;
       justify-content: space-around;
       width: 4em;
+      &.left {
+        margin-right: 0.5em;
+      }
       button {
         border: none;
         background: none;
         svg {
           width: 100%;
+        }
+        &.model-selector {
+          svg {
+            height: min-content;
+          }
+          &.error {
+            #bubble-base {
+              //fill: grey !important;
+            }
+            #robot-head * {
+              fill: #ff006f !important;
+            }
+          }
         }
 
         filter: drop-shadow(1vmin 1vmin 3px transparent);
