@@ -112,7 +112,7 @@ export default function Chat() {
         if (activePopup() === null) return
         let currentPopupElement = null
         if (activePopup() === "conversationTray") {
-            currentPopupElement = (<ConversationTray/>)
+            currentPopupElement = (<ConversationTray setConversation={setConversation} setActivePopup={setActivePopup} setMessages={setMessages}/>)
         } else if (activePopup() === "settings") {
             currentPopupElement = (<Settings/>)
         } else {

@@ -3,8 +3,10 @@ import { format, compareAsc } from "date-fns"
 import timeAgo from 'node-time-ago'
 import searchDir from '../functions/searchDir'
 import getDataDirectory from "../functions/getDataDirectory";
+import "../styles/conversationTray.scss"
 
-export default function ConversationTray() {
+export default function ConversationTray(props) {
+    const {setConversation, setActivePopup, setMessages} = props
   const [conversations, setConversations] = createSignal(null);
   onMount(async ()=>{
     const {join} = require('path')
@@ -14,13 +16,22 @@ export default function ConversationTray() {
     const conversations = await Promise.all(chatsPaths.map(async chatPath => JSON.parse(await readFile(chatPath.fullPath, 'utf8'))))
     setConversations(conversations)
   })
+  const viewConversation = conversation=>{
+    setConversation(conversation)
+    setMessages(conversation.messages)
+    setActivePopup(null)
+  }
+  const deleteConversation = conversation=>{
+
+  }
+
   return (
     <div class="conversation-tray">
       <h1>Conversations</h1>
       {conversations() === null ? (
         <span>Loading...</span>
       ) : (
-        <table>
+        <table class="conversations">
             <thead>
                 <tr>
                     <th>Name</th>
@@ -35,7 +46,7 @@ export default function ConversationTray() {
                 <td>{timeAgo(conversation.lastActive || conversation.created)}</td>
                 <td>{format(new Date(conversation.created), 'MMM do, Y')}</td>
                 <td>{conversation.id.substring(0, 3)}...{conversation.id.substring(conversation.id.length - 3)}</td>
-                <td><button>View</button><button>Delete</button></td>
+                <td><button onClick={()=>viewConversation(conversation)}>View</button><button onClick={()=>deleteConversation(conversation)}>Delete</button></td>
             </tr>}</For>
         </table>
       )}
