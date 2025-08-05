@@ -2,6 +2,9 @@
     .conversations {
         width: 100%;
         .conversation {
+            &.active {
+                background-color: #ffc0cb33;
+            }
             .naming {
                 text-align: center;
             }

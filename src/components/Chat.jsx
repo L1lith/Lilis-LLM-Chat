@@ -1,6 +1,7 @@
 import MessageList from "./MessageList"
 import { createSignal, onCleanup, onMount } from "solid-js"
 import Send from '../icons/send.svg?raw'
+import Refresh from '../icons/refresh.svg?raw'
 import SettingsIcon from '../icons/settings.svg?raw'
 import cancel from '../icons/cancel.svg?raw'
 import Inbox from '../icons/inbox.svg?raw'
@@ -43,17 +44,18 @@ export default function Chat() {
         }
     })
     const appendNewMessage = message => {
-        let newConvo = conversation()
+        let convo = conversation()
         const crypto = require("crypto");
-        if (newConvo === null) {
-            newConvo = {created: Date.now(), messages: [], id: crypto.randomUUID()}
+        if (convo === null) {
+            convo = {created: Date.now(), messages: [], id: crypto.randomUUID()}
         }
         if (!('created' in message)) message.created = Date.now()
         message.id = crypto.randomUUID()
-        newConvo.messages = newConvo.messages.concat([message])
-        setMessages(newConvo.messages)
-        setConversation(newConvo)
-        saveConversation(newConvo)
+        convo.messages = convo.messages.concat([message])
+        convo.lastActive = Date.now()
+        setMessages(convo.messages)
+        setConversation(convo)
+        saveConversation(convo)
     }
 
     const handleSubmit = async e => {
@@ -120,6 +122,11 @@ export default function Chat() {
         </span>
     }
 
+    const resetChat = ()=>{
+        setConversation(null)
+        setMessages([])
+    }
+
     return <div class="chat">
         {activePopup() ? renderPopup() : (<>
         <div onClick={()=>setActivePopup('conversationTray')} class="inbox" innerHTML={Inbox}></div>
@@ -127,7 +134,7 @@ export default function Chat() {
         <MessageList messages={messages}/>
         <form class="prompter" onSubmit={handleSubmit}>
             <textarea onInput={autoAdjustInputHeight} onKeyDown={handleKeyDown} onKeyUp={handleKeyUp} class="prompt" disabled={awaitingResponse()} ref={input}/>
-            <button ref={submitButton} type="submit"><div innerHTML={Send}></div></button>
+            <span className="toolbar right"><button innerHTML={Send} ref={submitButton} type="submit"/><button onClick={resetChat} innerHTML={Refresh}></button></span>
         </form>
         </>)}
         

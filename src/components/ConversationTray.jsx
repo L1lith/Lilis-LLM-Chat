@@ -14,12 +14,16 @@ export default function ConversationTray(props) {
   const [conversations, setConversations] = createSignal(null);
   const [editingConversationName, setEditingConversationName] = createSignal(null)
   let renameInput = null
+  const sortConversations = conversations => {
+    console.log(conversations)
+    return conversations.sort((convoA, convoB) => (convoB.lastActive || convoB.created) - (convoA.lastActive || convoA.created))
+  }
   onMount(async ()=>{
     const {join} = require('path')
     const chatsPaths = await searchDir(join(getDataDirectory(), 'chats'), info => console.log(info)||info.shortPath.endsWith('.json') && info.isFile)
     const {readFile} = require('fs/promises')
     const conversations = await Promise.all(chatsPaths.map(async chatPath => JSON.parse(await readFile(chatPath.fullPath, 'utf8'))))
-    setConversations(conversations)
+    setConversations(sortConversations(conversations))
   })
   createEffect(()=>{
     editingConversationName()
@@ -32,7 +36,7 @@ export default function ConversationTray(props) {
   }
   const deleteConversation = conversation=>{
     if (activeConversation()?.id === conversation.id) setConversation(null)
-    setConversations(conversations().filter(check => check.id !== conversation.id))
+    setConversations(sortConversations(conversations().filter(check => check.id !== conversation.id)))
     const {rm} = require('fs/promises')
     const {join} = require('path')
     const chatFile = join(getDataDirectory(), 'chats', conversation.id + '.json')
