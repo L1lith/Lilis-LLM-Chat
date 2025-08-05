@@ -71,8 +71,8 @@ export default function APIPicker() {
           {APIList().map((api, i) => (
             <li class="api">
               <span class="title">- {api.name || `API #${i + 1}`} -</span>
-              <span class="url">URL: {api.url}</span>
-              <span class="key">Key: {api.key}</span>
+              <span class="url"><strong>URL:</strong> {api.URL}</span>
+              <span class="key"><strong>Key:</strong> {api.key}</span>
             </li>
           ))}
         </ul>

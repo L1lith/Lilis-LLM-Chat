@@ -1,6 +1,9 @@
 .settings-panel {
     
     .api-picker {
+        h1 {
+            margin-bottom: 0.5em;
+        }
         &.add-api {
             form {
                 .error {
@@ -16,6 +19,20 @@
                 align-items: center;
                 button[type="submit"] {
                     margin-top: 0.5em;
+                }
+            }
+        }
+        .api-list {
+            .api {
+                text-shadow: 0.1em 0.1em 0.2em #00000070;
+                background-color: #ffffff21;
+                margin-bottom: 0.5em;
+                display: flex;
+                padding: 0.5em;
+                flex-direction: column;
+                .title {
+                    text-decoration: underline;
+                    font-weight: bold;
                 }
             }
         }
