@@ -1,15 +1,19 @@
-import { createSignal } from "solid-js";
+import { createEffect, createSignal } from "solid-js";
 import Add from '../icons/add.svg?raw'
 import isValidURL from "../functions/isValidURL";
 import db from "../../database";
 
 export default function APIPicker() {
-  const [APIList, setAPIList] = createSignal([]);
+  const [APIList, setAPIList] = createSignal(db.APIs || []);
   const [currentView, setCurrentView] = createSignal(null)
   const [formError, setFormError] = createSignal(null)
   let apiURLRef = null
   let apiKeyRef = null
   let apiNameRef = null
+
+  createEffect(()=>{
+    db.APIs = APIList() // Automatically sync the APIList to the file system
+  })
 
   const resetView = ()=>{
     setCurrentView(null)
@@ -18,21 +22,22 @@ export default function APIPicker() {
 
   const addNewAPI = e=>{
     e.preventDefault()
-    const apiURL = apiURLRef.value.trim()
-    const apiKey = apiKeyRef.value.trim()
-    const apiName = apiNameRef.value.trim()
-    const formData = {apiURL, apiKey, apiName}
+    const URL = apiURLRef.value.trim()
+    const key = apiKeyRef.value.trim()
+    const name = apiNameRef.value.trim()
+    const formData = {URL, key, name}
     const foundFormError = getFormError(formData)
     setFormError(foundFormError)
     if (foundFormError) return // Don't let the form submit if the data is invalid
     // We've received a seemingly valid API config let's add it to the list now     
-    console.log(db)
+    setAPIList(APIList().concat([formData]))
+    setCurrentView(null)
   }
 
   const getFormError = formData => {
-    if (!formData.apiURL) return "Please supply an API URL"
-    if (!isValidURL(formData.apiURL)) return "API URL is not a valid URL"
-    if (!formData.apiKey) return "Please supply an API Key"
+    if (!formData.URL) return "Please supply an API URL"
+    if (!isValidURL(formData.URL)) return "API URL is not a valid URL"
+    if (!formData.key) return "Please supply an API Key"
     return null
   }
   
