@@ -15,6 +15,16 @@ export default function Chat() {
     const [chatUnfocused, setChatUnfocused] = createSignal(false)
     const [messages, setMessages] = createSignal([])
     const [awaitingResponse, setAwaitingResponse] = createSignal(false)
+    const [conversation, setConversation] = createSignal(null)
+
+    let conversationsDir = null
+
+    onMount(()=>{
+        const { join } = require("path");
+        const { mkdirSync } = require("fs");
+        conversationsDir = join(process.env.DATA_DIRECTORY, "chats")
+        mkdirSync(conversationsDir, { recursive: true });
+    })
 
 
     const autoFocus = () => {
@@ -32,9 +42,23 @@ export default function Chat() {
             window.removeEventListener('focus', autoFocus)
         }
     })
+    const saveConversation = conversation => {
+        const {join} = require('path')
+        const destination = join(conversationsDir, conversation.id + '.json')
+        const {writeFile} = require('fs/promises')
+        writeFile(destination, JSON.stringify(conversation)).catch(console.error)
+    }
     const appendNewMessage = message => {
-        const newHistory = messages().concat([message])
-        setMessages(newHistory)
+        let newConvo = conversation()
+        if (newConvo === null) {
+            const crypto = require("crypto");
+            newConvo = {created: Date.now(), messages: [], id: crypto.randomUUID()}
+        }
+        if (!('created' in message)) message.created = Date.now()
+        newConvo.messages = newConvo.messages.concat([message])
+        setMessages(newConvo.messages)
+        setConversation(newConvo)
+        saveConversation(newConvo)
     }
 
     const handleSubmit = async e => {
@@ -45,6 +69,7 @@ export default function Chat() {
         input.value=''
         autoAdjustInputHeight()
         setAwaitingResponse(true)
+        console.log('awaiting AI response')
         let AIResponse
         try {
             AIResponse = await getAIResponse()
@@ -56,6 +81,7 @@ export default function Chat() {
             return
         }
         appendNewMessage({from: 'AI', content: AIResponse})
+        console.log('got ai response')
         setAwaitingResponse(false)
         autoFocus()
     }
