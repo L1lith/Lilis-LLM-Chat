@@ -30,9 +30,22 @@
                 display: flex;
                 padding: 0.5em;
                 flex-direction: column;
+                &.active {
+                    outline: 2px solid pink;
+                }
                 .title {
                     text-decoration: underline;
                     font-weight: bold;
+                }
+                .delete-api {
+                    width: fit-content;
+                    margin-left: auto;
+                    margin-right: auto;
+                    margin-top: 0.5em;
+                    cursor: pointer;
+                    svg {
+                        width: 1.5em;
+                    }
                 }
             }
         }

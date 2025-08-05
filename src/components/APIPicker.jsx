@@ -1,5 +1,6 @@
 import { createEffect, createSignal } from "solid-js";
 import Add from '../icons/add.svg?raw'
+import Trash from '../icons/trash.svg?raw'
 import isValidURL from "../functions/isValidURL";
 import db from "../../database";
 
@@ -41,12 +42,15 @@ export default function APIPicker() {
     return null
   }
   
-
+  const deleteAPI = (api) => {
+    setAPIList(APIList().filter(apiItem => apiItem !== api))
+  }
   
 
   const renderContent = ()=>{
     if (currentView() === "add-api") {
     return <form onSubmit={addNewAPI}>
+      <h1>Add an API</h1>
       {formError() ? <span class="error">Error: {formError()}</span> : null}
       <label for="api-url">Base URL*</label>
       <input ref={apiURLRef} id="api-url"/>
@@ -66,13 +70,14 @@ export default function APIPicker() {
     <>
       <h2>APIs</h2>
       {<>
-            {APIList().length < 1 ? <span>No APIs yet.</span> : (
+            {APIList().length < 1 ? <span>No APIs yet. Press the + icon to add a new one.</span> : (
         <ul class="api-list">
           {APIList().map((api, i) => (
             <li class="api">
               <span class="title">- {api.name || `API #${i + 1}`} -</span>
               <span class="url"><strong>URL:</strong> {api.URL}</span>
               <span class="key"><strong>Key:</strong> {api.key}</span>
+              <div onClick={()=>{deleteAPI(api);}} class="delete-api" innerHTML={Trash}></div>
             </li>
           ))}
         </ul>
