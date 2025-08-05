@@ -1,6 +1,7 @@
 import { createSignal } from "solid-js";
 import Add from '../icons/add.svg?raw'
 import isValidURL from "../functions/isValidURL";
+import db from "../../database";
 
 export default function APIPicker() {
   const [APIList, setAPIList] = createSignal([]);
@@ -25,6 +26,7 @@ export default function APIPicker() {
     setFormError(foundFormError)
     if (foundFormError) return // Don't let the form submit if the data is invalid
     // We've received a seemingly valid API config let's add it to the list now     
+    console.log(db)
   }
 
   const getFormError = formData => {
