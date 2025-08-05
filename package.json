@@ -39,7 +39,9 @@
   },
   "dependencies": {
     "@astrojs/solid-js": "^5.1.0",
+    "date-fns": "^4.1.0",
     "jabr": "^0.3.3",
+    "node-time-ago": "^1.0.0",
     "openai": "^5.11.0",
     "sass": "^1.89.2",
     "solid-js": "^1.9.7",
