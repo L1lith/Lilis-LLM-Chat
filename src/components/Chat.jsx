@@ -12,7 +12,6 @@ export default function Chat() {
     let input = null
     let submitButton = null
     const [activePopup, setActivePopup] = createSignal(null)
-    const [chatUnfocused, setChatUnfocused] = createSignal(false)
     const [messages, setMessages] = createSignal([])
     const [awaitingResponse, setAwaitingResponse] = createSignal(false)
     const [conversation, setConversation] = createSignal(null)
@@ -28,7 +27,7 @@ export default function Chat() {
 
 
     const autoFocus = () => {
-        if (chatUnfocused()) return
+        if (activePopup() !== null) return
         input.focus()
     };
     onMount(()=>{
@@ -50,11 +49,12 @@ export default function Chat() {
     }
     const appendNewMessage = message => {
         let newConvo = conversation()
+        const crypto = require("crypto");
         if (newConvo === null) {
-            const crypto = require("crypto");
             newConvo = {created: Date.now(), messages: [], id: crypto.randomUUID()}
         }
         if (!('created' in message)) message.created = Date.now()
+        message.id = crypto.randomUUID()
         newConvo.messages = newConvo.messages.concat([message])
         setMessages(newConvo.messages)
         setConversation(newConvo)
