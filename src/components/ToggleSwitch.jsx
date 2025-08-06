@@ -1,4 +1,4 @@
-import { createSignal } from "solid-js"
+import { createSignal, createEffect } from "solid-js"
 import "../styles/ToggleSwitch.scss"
 
 export default function ToggleSwitch(props){
@@ -21,8 +21,8 @@ export default function ToggleSwitch(props){
         if (typeof onToggle == 'function') onToggle(newState)
     }
 
-    return <div onClick={doToggle} style={{width: baseWidth, 'box-shadow': `inset 0 0 ${baseWidthCalculated.value / 10 + baseWidthCalculated.unit} ${active() ? "#ffffff6b" : "#adff2f6b" }`, 'border-width': baseWidthCalculated.value / 20 + baseWidthCalculated.unit}} class={"toggle-switch " + (active() ? 'active' : 'inactive')}>
+    return <button onClick={doToggle} style={{width: baseWidth, 'box-shadow': `inset 0 0 ${baseWidthCalculated.value / 10 + baseWidthCalculated.unit} ${active() ? "#ffffff6b" : "#adff2f6b" }`, 'border-width': baseWidthCalculated.value / 20 + baseWidthCalculated.unit}} class={"toggle-switch " + (active() ? 'active' : 'inactive')}>
         <div style={{'box-shadow':` inset 0px 0px ${baseWidthCalculated.value / 10 + baseWidthCalculated.unit} black`,border: `${baseWidthCalculated.value / 20 + baseWidthCalculated.unit} inset black`, margin: -1 * (baseWidthCalculated.value / (20)) + baseWidthCalculated.unit}} class="circle"/>
-    </div>
+    </button>
 
 }

@@ -40,15 +40,21 @@
                     text-decoration: underline;
                     font-weight: bold;
                 }
-                .delete-api {
+                .controls {
+                    display: flex;
+                    justify-content: space-around;
+                    .delete-api {
+                    border: none;
+                    background: none;
                     width: fit-content;
-                    margin-left: auto;
-                    margin-right: auto;
-                    margin-top: 0.5em;
+                    // margin-left: auto;
+                    // margin-right: auto;
+                    // margin-top: 0.5em;
                     cursor: pointer;
                     svg {
                         width: 1.5em;
                     }
+                }
                 }
             }
         }

@@ -3,11 +3,18 @@ import Add from '../icons/add.svg?raw'
 import Trash from '../icons/trash.svg?raw'
 import isValidURL from "../functions/isValidURL";
 import db from "../../database";
+import ToggleSwitch from "./ToggleSwitch";
 
-export default function APIPicker() {
+export default function APIPicker(props) {
+  const {setCurrentAPI, currentAPI} = props
   const [APIList, setAPIList] = createSignal(db.APIs || []);
   const [currentView, setCurrentView] = createSignal(null)
   const [formError, setFormError] = createSignal(null)
+  const [activeToggleID, setActiveToggleID] = createSignal(currentAPI()?.id || null)
+
+  createEffect(()=>{
+    setActiveToggleID(currentAPI()?.id || null)
+  })
   let apiURLRef = null
   let apiKeyRef = null
   let apiNameRef = null
@@ -30,6 +37,8 @@ export default function APIPicker() {
     const foundFormError = getFormError(formData)
     setFormError(foundFormError)
     if (foundFormError) return // Don't let the form submit if the data is invalid
+    const crypto = require('crypto')
+    formData.id = crypto.randomUUID()
     // We've received a seemingly valid API config let's add it to the list now     
     setAPIList(APIList().concat([formData]))
     setCurrentView(null)
@@ -46,6 +55,14 @@ export default function APIPicker() {
     setAPIList(APIList().filter(apiItem => apiItem !== api))
   }
   
+  const toggleAPI = (api, active) => {
+    setCurrentAPI(active ? api : null)
+    if (active) {
+      db.currentAPI = api.id
+    } else {
+      delete db.currentAPI
+    }
+  }
 
   const renderContent = ()=>{
     if (currentView() === "add-api") {
@@ -77,7 +94,7 @@ export default function APIPicker() {
               <span class="title">- {api.name || `API #${i + 1}`} -</span>
               <span class="url"><strong>URL:</strong> {api.URL}</span>
               <span class="key"><strong>Key:</strong> {api.key}</span>
-              <div onClick={()=>{deleteAPI(api);}} class="delete-api" innerHTML={Trash}></div>
+              <span class="controls"><ToggleSwitch onToggle={active => toggleAPI(api, active)} activeToggleID={activeToggleID} toggleID={api.id} baseWidth="4em"/><button onClick={()=>{deleteAPI(api);}} class="delete-api" innerHTML={Trash}/></span>
             </li>
           ))}
         </ul>

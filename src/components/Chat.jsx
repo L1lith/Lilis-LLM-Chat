@@ -1,5 +1,5 @@
 import MessageList from "./MessageList";
-import { createSignal, onCleanup, onMount } from "solid-js";
+import { createSignal, onCleanup, onMount} from "solid-js";
 import Send from "../icons/send.svg?raw";
 import Refresh from "../icons/refresh.svg?raw";
 import SettingsIcon from "../icons/settings.svg?raw";
@@ -10,6 +10,12 @@ import "../styles/chat.scss";
 import ConversationTray from "./ConversationTray";
 import Settings from "./Settings";
 import saveConversation from "../functions/saveConversation";
+import db from '../../database'
+
+function getStartingAPI() {
+    if (!db.currentAPI || db.currentAPI === "null") return null
+    return db.APIs.find(api => api.id === db.currentAPI) || null
+}
 
 export default function Chat() {
   let input = null;
@@ -27,6 +33,7 @@ export default function Chat() {
   onMount(() => {
     const { join } = require("path");
     const { mkdirSync } = require("fs");
+    setCurrentAPI(getStartingAPI())
     conversationsDir = join(process.env.DATA_DIRECTORY, "chats");
     mkdirSync(conversationsDir, { recursive: true });
     createStatusMessage("disappearing in 3 seconds", "info", 3000);
@@ -165,7 +172,7 @@ export default function Chat() {
         />
       );
     } else if (activePopup() === "settings") {
-      currentPopupElement = <Settings />;
+      currentPopupElement = <Settings setCurrentAPI={setCurrentAPI} currentAPI={currentAPI} />;
     } else {
       throw new Error("Invalid Popup Name");
     }
