@@ -1,8 +1,7 @@
 import APIPicker from "./APIPicker";
 import "../styles/settings.scss"
 import getDataDirectory from "../functions/getDataDirectory";
-import toggleSwitch from './ToggleSwitch'
-import ToggleSwitch from "./ToggleSwitch";
+import DotTyping from "./DotTyping";
 
 export default function Settings(props) {
     const {setCurrentAPI, currentAPI} = props

@@ -12,6 +12,7 @@ import Settings from "./Settings";
 import saveConversation from "../functions/saveConversation";
 import db from "../../database";
 import ModelPicker from "./ModelPicker";
+import DotTyping from "./DotTyping";
 import convertMessagesToOpenAIFormat from "../functions/convertMessagesToOpenAIFormat";
 
 function getStartingAPI() {
@@ -30,6 +31,7 @@ export default function Chat() {
   const [currentModel, setCurrentModel] = createSignal(null);
   const [statusMessages, setStatusMessages] = createSignal([]);
   const [modelChoices, setModelChoices] = createSignal(null);
+  const [AIThinking, setAIThinking] = createSignal(false)
 
   let openAIClient = null;
   let conversationsDir = null;
@@ -43,7 +45,7 @@ export default function Chat() {
       });
       window.openAIClient = openAIClient;
       openAIClient.models.list().then((data) => {
-        setModelChoices(data.body);
+        setModelChoices(data.body.filter(model => model.type === "chat"));
         console.log("got models", data.body);
       });
     } else {
@@ -53,6 +55,10 @@ export default function Chat() {
       setCurrentModel(null);
     }
   });
+
+  const handleError = error => {
+
+  }
 
   onMount(() => {
     const { join } = require("path");
@@ -162,33 +168,33 @@ export default function Chat() {
   };
   const getAIResponse = async () => {
     if (!currentAPI() || !currentModel || (!Array.isArray(messages() || messages().length < 1))) throw new Error("Missing the model or the API or the messages.")
-    //     console.log({
-    //   model: currentModel(),
-    //   messages: convertMessagesToOpenAIFormat(messages()),
-    // })
+    setAIThinking(true)
     const response = await openAIClient.chat.completions.create({
       model: currentModel().id,
       messages: convertMessagesToOpenAIFormat(messages()),
     });
+    setAIThinking(false)
     return response.choices[0].message.content;
   };
   let isShiftDown = false;
   const handleKeyDown = (event) => {
     const { key } = event;
     if (key === "Shift") {
-      isShiftDown = true;
+        isShiftDown = true;
     } else if (key === "Enter") {
-      if (!isShiftDown /*&& !input.value.includes('\n')*/) {
-        event.preventDefault();
-        // Trigger Submit
-        submitButton.click();
-      }
+        if (!isShiftDown /*&& !input.value.includes('\n')*/) {
+            event.preventDefault();
+            // Trigger Submit
+            submitButton.click();
+        }
     }
+    //console.log('down', key, isShiftDown)
   };
   const handleKeyUp = ({ key }) => {
     if (key === "Shift") {
       isShiftDown = false;
     }
+    //console.log('up', key, isShiftDown)
   };
   const autoAdjustInputHeight = () => {
     input.style.height = "";
@@ -288,13 +294,13 @@ export default function Chat() {
               <button
                 onClick={selectModel}
                 class={
-                  "model-selector" +
-                  (currentAPI() === null || currentModel() === null
-                    ? " error"
-                    : "")
+                  "model-selector " +
+                  (currentAPI() === null
+                    ? "error"
+                    : currentModel() === null ? 'ready' : "active")
                 }
-                innerHTML={AIChat}
-              ></button>
+                
+              ><span innerHTML={AIChat}/>{AIThinking() ? <span class="dots"><DotTyping/></span> : null}</button>
             </span>
             <textarea
               onInput={autoAdjustInputHeight}

@@ -25,6 +25,9 @@
     "srcDir": "./dist",
     "outDir": "./bundle",
     "logLevel": "error",
+    "window": {
+      "icon": "./NWJS/llm-chat-logo.ico"
+    },
     "app": {
       "icon": "./NWJS/llm-chat-logo.ico"
     }
@@ -40,7 +43,9 @@
   "dependencies": {
     "@astrojs/solid-js": "^5.1.0",
     "date-fns": "^4.1.0",
+    "dompurify": "^3.2.6",
     "jabr": "^0.3.3",
+    "marked": "^16.1.2",
     "node-time-ago": "^1.0.0",
     "open-file-explorer": "^1.0.2",
     "openai": "^5.11.0",

@@ -1,4 +1,6 @@
 import { createEffect } from "solid-js";
+import {marked} from 'marked'
+import DOMPurify from 'dompurify'
 
 export default function MessageList(props) {
   let inner = null;
@@ -13,7 +15,7 @@ export default function MessageList(props) {
           {(message, i) => (
             <li class={"message " + message.from.toLowerCase()}>
               <span class="author">{message.from}</span>
-              <span class="content">{message.content.trim()}</span>
+              <div class="content" innerHTML={DOMPurify.sanitize(marked.parse(message.content.trim()))}/>
             </li>
           )}
         </For>

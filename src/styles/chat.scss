@@ -105,7 +105,7 @@
         align-items: flex-end;
         align-self: flex-end;
         .content {
-          text-align: right;
+          text-align: left;
         }
       }
     }
@@ -173,16 +173,27 @@
           width: 100%;
         }
         &.model-selector {
+          position: relative;
+          & > span:has(svg) {
+            display: contents;
+          }
           svg {
             height: min-content;
           }
           &.error {
-            #bubble-base {
-              //fill: grey !important;
-            }
             #robot-head * {
               fill: #ff006f !important;
             }
+          }
+          &.ready {
+            #robot-head * {
+              fill: #ff9900 !important;
+            }
+          }
+          .dots {
+            position: absolute;
+            top: -19%;
+            right: 44%;
           }
         }
 
