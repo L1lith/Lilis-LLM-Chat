@@ -1,5 +1,5 @@
 import MessageList from "./MessageList";
-import { createEffect, createSignal, onCleanup, onMount} from "solid-js";
+import { createEffect, createSignal, onCleanup, onMount } from "solid-js";
 import Send from "../icons/send.svg?raw";
 import Refresh from "../icons/refresh.svg?raw";
 import SettingsIcon from "../icons/settings.svg?raw";
@@ -10,12 +10,13 @@ import "../styles/chat.scss";
 import ConversationTray from "./ConversationTray";
 import Settings from "./Settings";
 import saveConversation from "../functions/saveConversation";
-import db from '../../database'
-import ModelPicker from './ModelPicker'
+import db from "../../database";
+import ModelPicker from "./ModelPicker";
+import convertMessagesToOpenAIFormat from "../functions/convertMessagesToOpenAIFormat";
 
 function getStartingAPI() {
-    if (!db.currentAPI || db.currentAPI === "null") return null
-    return db.APIs.find(api => api.id === db.currentAPI) || null
+  if (!db.currentAPI || db.currentAPI === "null") return null;
+  return db.APIs.find((api) => api.id === db.currentAPI) || null;
 }
 
 export default function Chat() {
@@ -28,35 +29,35 @@ export default function Chat() {
   const [currentAPI, setCurrentAPI] = createSignal(null);
   const [currentModel, setCurrentModel] = createSignal(null);
   const [statusMessages, setStatusMessages] = createSignal([]);
-  const [modelChoices, setModelChoices] = createSignal(null)
+  const [modelChoices, setModelChoices] = createSignal(null);
 
-  let openAIClient = null
+  let openAIClient = null;
   let conversationsDir = null;
-  createEffect(()=>{
-    if (currentAPI() && currentAPI !== 'null') {
-        const OpenAI = require('openai')
-        openAIClient = new OpenAI({
-            baseURL: currentAPI().URL,
-            apiKey: currentAPI().key,
-            dangerouslyAllowBrowser: true
-        })
-        window.openAIClient = openAIClient
-        openAIClient.models.list().then(data => {
-            setModelChoices(data.body)
-            console.log('got models', data.body)
-        })
+  createEffect(() => {
+    if (currentAPI() && currentAPI !== "null") {
+      const OpenAI = require("openai");
+      openAIClient = new OpenAI({
+        baseURL: currentAPI().URL,
+        apiKey: currentAPI().key,
+        dangerouslyAllowBrowser: true,
+      });
+      window.openAIClient = openAIClient;
+      openAIClient.models.list().then((data) => {
+        setModelChoices(data.body);
+        console.log("got models", data.body);
+      });
     } else {
-        openAIClient = null
-        window.openAIClient = openAIClient
-        setModelChoices(null)
-        setCurrentModel(null)
+      openAIClient = null;
+      window.openAIClient = openAIClient;
+      setModelChoices(null);
+      setCurrentModel(null);
     }
-  })
+  });
 
   onMount(() => {
     const { join } = require("path");
     const { mkdirSync } = require("fs");
-    setCurrentAPI(getStartingAPI())
+    setCurrentAPI(getStartingAPI());
     conversationsDir = join(process.env.DATA_DIRECTORY, "chats");
     mkdirSync(conversationsDir, { recursive: true });
   });
@@ -133,14 +134,17 @@ export default function Chat() {
     }
 
     if (currentModel() === null) {
-      return createStatusMessage("You must select a model, click the robot", "error", 5000);
+      return createStatusMessage(
+        "You must select a model, click the robot",
+        "error",
+        5000
+      );
     }
 
     appendNewMessage({ from: "User", content: input.value });
     input.value = "";
     autoAdjustInputHeight();
     setAwaitingResponse(true);
-    console.log("awaiting AI response");
     let AIResponse;
     try {
       AIResponse = await getAIResponse();
@@ -157,17 +161,25 @@ export default function Chat() {
     autoFocus();
   };
   const getAIResponse = async () => {
-    await new Promise((res) => setTimeout(res, 1500));
-    return "hi im a bot";
+    if (!currentAPI() || !currentModel || (!Array.isArray(messages() || messages().length < 1))) throw new Error("Missing the model or the API or the messages.")
+    //     console.log({
+    //   model: currentModel(),
+    //   messages: convertMessagesToOpenAIFormat(messages()),
+    // })
+    const response = await openAIClient.chat.completions.create({
+      model: currentModel().id,
+      messages: convertMessagesToOpenAIFormat(messages()),
+    });
+    return response.choices[0].message.content;
   };
   let isShiftDown = false;
   const handleKeyDown = (event) => {
-    const { key } = event
+    const { key } = event;
     if (key === "Shift") {
-        isShiftDown = true;
+      isShiftDown = true;
     } else if (key === "Enter") {
-        if (!isShiftDown /*&& !input.value.includes('\n')*/) {
-        event.preventDefault()
+      if (!isShiftDown /*&& !input.value.includes('\n')*/) {
+        event.preventDefault();
         // Trigger Submit
         submitButton.click();
       }
@@ -195,9 +207,19 @@ export default function Chat() {
         />
       );
     } else if (activePopup() === "settings") {
-      currentPopupElement = <Settings setCurrentAPI={setCurrentAPI} currentAPI={currentAPI} />;
-    } else if (activePopup() === "model-picker"){
-      currentPopupElement = <ModelPicker modelChoices={modelChoices} onModelSelect={model =>{setCurrentModel(model); setActivePopup(null)}}/>
+      currentPopupElement = (
+        <Settings setCurrentAPI={setCurrentAPI} currentAPI={currentAPI} />
+      );
+    } else if (activePopup() === "model-picker") {
+      currentPopupElement = (
+        <ModelPicker
+          modelChoices={modelChoices}
+          onModelSelect={(model) => {
+            setCurrentModel(model);
+            setActivePopup(null);
+          }}
+        />
+      );
     } else {
       throw new Error("Invalid Popup Name");
     }
@@ -221,9 +243,9 @@ export default function Chat() {
         5000
       );
     } else if (!Array.isArray(modelChoices()) || modelChoices().length < 1) {
-        createStatusMessage("Error loading the model choices", 'error', 5000)
+      createStatusMessage("Error loading the model choices", "error", 5000);
     } else {
-        setActivePopup('model-picker')
+      setActivePopup("model-picker");
     }
     // Todo: Fetch the model choices, then set the model choices
   };

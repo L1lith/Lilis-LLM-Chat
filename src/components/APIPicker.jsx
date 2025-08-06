@@ -89,7 +89,7 @@ export default function APIPicker(props) {
       {<>
             {APIList().length < 1 ? <span>No APIs yet. Press the + icon to add a new one.</span> : (
         <ul class="api-list">
-          {APIList().map((api, i) => (
+          {APIList().sort().map((api, i) => (
             <li class="api">
               <span class="title">- {api.name || `API #${i + 1}`} -</span>
               <span class="url"><strong>URL:</strong> {api.URL}</span>
