@@ -60,7 +60,7 @@ export default function APIPicker(props) {
     if (active) {
       db.currentAPI = api.id
     } else {
-      delete db.currentAPI
+      db.currentAPI = 'null'
     }
   }
 

@@ -1,5 +1,5 @@
 import MessageList from "./MessageList";
-import { createSignal, onCleanup, onMount} from "solid-js";
+import { createEffect, createSignal, onCleanup, onMount} from "solid-js";
 import Send from "../icons/send.svg?raw";
 import Refresh from "../icons/refresh.svg?raw";
 import SettingsIcon from "../icons/settings.svg?raw";
@@ -11,6 +11,7 @@ import ConversationTray from "./ConversationTray";
 import Settings from "./Settings";
 import saveConversation from "../functions/saveConversation";
 import db from '../../database'
+import ModelPicker from './ModelPicker'
 
 function getStartingAPI() {
     if (!db.currentAPI || db.currentAPI === "null") return null
@@ -27,8 +28,30 @@ export default function Chat() {
   const [currentAPI, setCurrentAPI] = createSignal(null);
   const [currentModel, setCurrentModel] = createSignal(null);
   const [statusMessages, setStatusMessages] = createSignal([]);
+  const [modelChoices, setModelChoices] = createSignal(null)
 
+  let openAIClient = null
   let conversationsDir = null;
+  createEffect(()=>{
+    if (currentAPI() && currentAPI !== 'null') {
+        const OpenAI = require('openai')
+        openAIClient = new OpenAI({
+            baseURL: currentAPI().URL,
+            apiKey: currentAPI().key,
+            dangerouslyAllowBrowser: true
+        })
+        window.openAIClient = openAIClient
+        openAIClient.models.list().then(data => {
+            setModelChoices(data.body)
+            console.log('got models', data.body)
+        })
+    } else {
+        openAIClient = null
+        window.openAIClient = openAIClient
+        setModelChoices(null)
+        setCurrentModel(null)
+    }
+  })
 
   onMount(() => {
     const { join } = require("path");
@@ -130,7 +153,6 @@ export default function Chat() {
       return;
     }
     appendNewMessage({ from: "AI", content: AIResponse });
-    console.log("got ai response");
     setAwaitingResponse(false);
     autoFocus();
   };
@@ -174,6 +196,8 @@ export default function Chat() {
       );
     } else if (activePopup() === "settings") {
       currentPopupElement = <Settings setCurrentAPI={setCurrentAPI} currentAPI={currentAPI} />;
+    } else if (activePopup() === "model-picker"){
+      currentPopupElement = <ModelPicker modelChoices={modelChoices} onModelSelect={model =>{setCurrentModel(model); setActivePopup(null)}}/>
     } else {
       throw new Error("Invalid Popup Name");
     }
@@ -196,7 +220,12 @@ export default function Chat() {
         "error",
         5000
       );
+    } else if (!Array.isArray(modelChoices()) || modelChoices().length < 1) {
+        createStatusMessage("Error loading the model choices", 'error', 5000)
+    } else {
+        setActivePopup('model-picker')
     }
+    // Todo: Fetch the model choices, then set the model choices
   };
 
   const resetChat = () => {

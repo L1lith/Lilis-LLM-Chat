@@ -1,0 +1,12 @@
+.model-picker {
+  ul {
+    list-style: none;
+    li {
+        margin-bottom: 0.25em;
+        cursor: pointer;
+        &:nth-child(even) {
+            background-color: #ffffff21;
+        }
+    }
+  }  
+}
