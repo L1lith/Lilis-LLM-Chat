@@ -36,7 +36,6 @@ export default function Chat() {
     setCurrentAPI(getStartingAPI())
     conversationsDir = join(process.env.DATA_DIRECTORY, "chats");
     mkdirSync(conversationsDir, { recursive: true });
-    createStatusMessage("disappearing in 3 seconds", "info", 3000);
   });
 
   const autoFocus = () => {
@@ -111,7 +110,7 @@ export default function Chat() {
     }
 
     if (currentModel() === null) {
-      return createStatusMessage("You must select a model", "error", 5000);
+      return createStatusMessage("You must select a model, click the robot", "error", 5000);
     }
 
     appendNewMessage({ from: "User", content: input.value });
@@ -140,11 +139,13 @@ export default function Chat() {
     return "hi im a bot";
   };
   let isShiftDown = false;
-  const handleKeyDown = ({ key }) => {
+  const handleKeyDown = (event) => {
+    const { key } = event
     if (key === "Shift") {
-      isShiftDown = true;
+        isShiftDown = true;
     } else if (key === "Enter") {
-      if (!isShiftDown /*&& !input.value.includes('\n')*/) {
+        if (!isShiftDown /*&& !input.value.includes('\n')*/) {
+        event.preventDefault()
         // Trigger Submit
         submitButton.click();
       }
