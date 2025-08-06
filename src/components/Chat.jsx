@@ -171,11 +171,16 @@ export default function Chat() {
     setAIThinking(true)
     let response
     try {
-      const response = await openAIClient.chat.completions.create({
+      response = await openAIClient.chat.completions.create({
       model: currentModel().id,
       messages: convertMessagesToOpenAIFormat(messages()),
     });
     } catch(error) {
+      createStatusMessage(
+        String(error),
+        "error",
+        5000
+      );
       setAIThinking(false)
       throw error
     }
