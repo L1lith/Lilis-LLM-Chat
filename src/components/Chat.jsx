@@ -169,10 +169,16 @@ export default function Chat() {
   const getAIResponse = async () => {
     if (!currentAPI() || !currentModel || (!Array.isArray(messages() || messages().length < 1))) throw new Error("Missing the model or the API or the messages.")
     setAIThinking(true)
-    const response = await openAIClient.chat.completions.create({
+    let response
+    try {
+      const response = await openAIClient.chat.completions.create({
       model: currentModel().id,
       messages: convertMessagesToOpenAIFormat(messages()),
     });
+    } catch(error) {
+      setAIThinking(false)
+      throw error
+    }
     setAIThinking(false)
     return response.choices[0].message.content;
   };
