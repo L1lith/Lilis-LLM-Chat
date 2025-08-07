@@ -1,5 +1,10 @@
 .settings-panel {
-    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    & > *:not(:first-child) {
+        margin-top: 0.5em;
+    }
     .api-picker {
         border: 0.2em dashed #ffffff3b;
         padding: 1em;

@@ -15,6 +15,9 @@ import ModelPicker from "./ModelPicker";
 import DotTyping from "./DotTyping";
 import convertMessagesToOpenAIFormat from "../functions/convertMessagesToOpenAIFormat";
 import saveError from "../functions/saveError";
+import getDataDirectory from "../functions/getDataDirectory";
+import pkg from '../../package.json'
+import getLatestPackage from "../functions/getLatestPackage";
 
 function getStartingAPI() {
   if (!db.currentAPI || db.currentAPI === "null") return null;
@@ -70,8 +73,14 @@ export default function Chat() {
     const { join } = require("path");
     const { mkdirSync } = require("fs");
     setCurrentAPI(getStartingAPI());
-    conversationsDir = join(process.env.DATA_DIRECTORY, "chats");
+    conversationsDir = join(getDataDirectory(), "chats");
     mkdirSync(conversationsDir, { recursive: true });
+    getLatestPackage().then(newPkg => {
+      console.log('got package', newPkg, pkg.version, newPkg.version)
+      if (newPkg.version !== pkg.version) {
+        createStatusMessage(`Your app is outdated. Your version: ${pkg.version}, latest version: ${newPkg.version}`, 'info', 10000)
+      }
+    }).catch(handleError)
   });
 
   const autoFocus = () => {

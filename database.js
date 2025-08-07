@@ -1,16 +1,12 @@
 import { Jabr } from "jabr";
 import syncToJSON from "./src/functions/syncToJSON";
+import getDataDirectory from "./src/functions/getDataDirectory";
 
 const db = new Jabr();
 
 if (global.window) {
   const { join } = require("path");
-  const { mkdirSync } = require("fs");
-  mkdirSync(process.env.DATA_DIRECTORY, { recursive: true });
-  syncToJSON(
-    db,
-    join(process.env.DATA_DIRECTORY, "lilis-llm-chat-config.json")
-  );
+  syncToJSON(db, join(getDataDirectory(), "lilis-llm-chat-config.json"));
   window.db = db;
 }
 
