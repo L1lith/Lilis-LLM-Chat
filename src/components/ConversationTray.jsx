@@ -7,6 +7,7 @@ import "../styles/conversationTray.scss"
 import Pen from '../icons/pen.svg?raw'
 import Checkmark from '../icons/checkmark.svg?raw'
 import saveConversation from '../functions/saveConversation'
+import saveError from '../functions/saveError'
 
 export default function ConversationTray(props) {
     const activeConversation = props.conversation
@@ -40,7 +41,10 @@ export default function ConversationTray(props) {
     const {rm} = require('fs/promises')
     const {join} = require('path')
     const chatFile = join(getDataDirectory(), 'chats', conversation.id + '.json')
-    rm(chatFile).catch(console.error)
+    rm(chatFile).catch(error => {
+      console.error(error)
+      saveError(error)
+    })
   }
 
   const onInputKeyDown = (e, conversation) => {
