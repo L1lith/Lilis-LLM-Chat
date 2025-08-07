@@ -1,7 +1,9 @@
 function openURL(url) {
   if (typeof url != "string") throw new Error("URL must be a string");
   const urlObj = new URL(url);
-  if (urlObj.protocol !== "https") throw new Error("Insecure URL");
+  console.log(url, urlObj);
+  if (urlObj.protocol === "http:") urlObj.protocol = "https:";
+  if (urlObj.protocol !== "https:") throw new Error("Invalid URL");
   var spawn = require("child_process").spawn;
 
   var command;
@@ -28,7 +30,7 @@ function openURL(url) {
    */
 
   return new Promise((resolve, reject) => {
-    var child = spawn(command, [url]);
+    var child = spawn(command, [urlObj.href]);
     var errorText = "";
     child.stderr.setEncoding("utf8");
     child.stderr.on("data", function (data) {

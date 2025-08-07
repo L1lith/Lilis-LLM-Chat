@@ -115,7 +115,7 @@ ipcMain.handle(
       });
     })
 );
-ipcMain.handle("open-url", (_, url) => openURL(url));
+ipcMain.handle("open-url", (_, urlIn) => openURL(urlIn));
 ipcMain.handle("join", (_, ...args) => join(...args));
 ipcMain.handle("inspect", (_, ...args) => inspect(...args));
 ipcMain.handle("randomUUID", () => crypto.randomUUID());

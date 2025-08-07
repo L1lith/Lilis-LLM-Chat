@@ -1,13 +1,12 @@
 import { format } from "date-fns";
 import pkg from "../../package.json" with {type: 'json'}
-import {mkdir, writeFile, join, randomUUID, getPlatform} from '../functions/fs'
+import {mkdir, writeFile, join, randomUUID, getPlatform, inspect} from '../functions/fs'
 
 export default async function saveError(error) {
-  const { inspect } = window.electronAPI;
   const errorDirectory = "errors";
   await mkdir(errorDirectory, { recursive: true });
 
-  console.log("got error", error, error instanceof Error);
+  console.error(error)
   let outputString;
   if (error instanceof Error) {
     outputString = `~~~ Error Object:`;

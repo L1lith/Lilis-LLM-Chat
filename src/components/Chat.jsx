@@ -14,11 +14,12 @@ import ModelPicker from "./ModelPicker";
 import DotTyping from "./DotTyping";
 import convertMessagesToOpenAIFormat from "../functions/convertMessagesToOpenAIFormat";
 import saveError from "../functions/saveError";
-import pkg from '../../package.json'
+import pkg from "../../package.json";
 import getLatestPackage from "../functions/getLatestPackage";
-import {mkdir, randomUUID, openAIRequest} from '../functions/fs'
+import { mkdir, randomUUID, openAIRequest } from "../functions/fs";
 import syncToJSON from "../functions/syncToJSON";
 import db from "../../database";
+import { openURL } from "../functions/fs";
 
 function getStartingAPI() {
   if (!db.currentAPI || db.currentAPI === "null") return null;
@@ -40,7 +41,8 @@ export default function Chat() {
 
   createEffect(() => {
     if (currentAPI() && currentAPI !== "null") {
-      openAIRequest(currentAPI(), 'models.list').then((data) => {
+      openAIRequest(currentAPI(), "models.list")
+        .then((data) => {
           setModelChoices(data.body.filter((model) => model.type === "chat"));
           console.log("got models", data.body);
         })
@@ -53,22 +55,44 @@ export default function Chat() {
 
   const handleError = (error) => {
     console.error(error);
-    createStatusMessage((String(error).startsWith('Error: ') ? '' : 'Error: ') + String(error), "error", 5000);
+    createStatusMessage(
+      (String(error).startsWith("Error: ") ? "" : "Error: ") + String(error),
+      "error",
+      5000
+    );
     saveError(error).catch(console.error);
   };
 
   onMount(() => {
-    syncToJSON(db, 'lilis-llm-chat-config-private.json').then(dbReady => {
-      setCurrentAPI(getStartingAPI());
-    }).catch(handleError)
-    window.db = db
-    mkdir("chats");
-    getLatestPackage().then(newPkg => {
-      console.log('got package', newPkg, pkg.version, newPkg.version)
-      if (newPkg.version !== pkg.version) {
-        createStatusMessage(`Your app is outdated. Your version: ${pkg.version}, latest version: ${newPkg.version}`, 'info', 10000)
+    syncToJSON(db, "lilis-llm-chat-config-private.json")
+      .then((dbReady) => {
+        setCurrentAPI(getStartingAPI());
+      })
+      .catch(handleError);
+    document.addEventListener("click", (e) => {
+      let target = e.target.closest("a");
+      if (target) {
+        const url = target.getAttribute("href")
+        if (url) {
+          e.preventDefault()
+          openURL(url)
+        }
       }
-    }).catch(handleError)
+    });
+    window.db = db;
+    mkdir("chats");
+    getLatestPackage()
+      .then((newPkg) => {
+        console.log("got package", newPkg, pkg.version, newPkg.version);
+        if (newPkg.version !== pkg.version) {
+          createStatusMessage(
+            `Your app is outdated. Your version: ${pkg.version}, latest version: ${newPkg.version}`,
+            "info",
+            10000
+          );
+        }
+      })
+      .catch(handleError);
   });
 
   const autoFocus = () => {
@@ -161,7 +185,8 @@ export default function Chat() {
   };
   const getAIResponse = async () => {
     if (
-      !currentAPI() || currentAPI() === 'null' ||
+      !currentAPI() ||
+      currentAPI() === "null" ||
       !currentModel ||
       !Array.isArray(messages() || messages().length < 1)
     )
@@ -169,10 +194,10 @@ export default function Chat() {
     setAIThinking(true);
     let response;
     try {
-      response = await openAIRequest(currentAPI(), 'chat.completions.create', {
+      response = await openAIRequest(currentAPI(), "chat.completions.create", {
         model: currentModel().id,
         messages: convertMessagesToOpenAIFormat(messages()),
-      })
+      });
     } catch (error) {
       handleError(error);
       setAIThinking(false);
@@ -224,6 +249,7 @@ export default function Chat() {
     } else if (activePopup() === "model-picker") {
       currentPopupElement = (
         <ModelPicker
+          currentModel={currentModel}
           modelChoices={modelChoices}
           onModelSelect={(model) => {
             setCurrentModel(model);

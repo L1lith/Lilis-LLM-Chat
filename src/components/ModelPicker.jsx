@@ -9,7 +9,8 @@ function abbreviateContextLength(contextLength) {
   return contextLength
 }
 
-export default function ModelPicker({ modelChoices, onModelSelect }) {
+export default function ModelPicker({ modelChoices, onModelSelect, currentModel}) {
+  const currentModelID = currentModel().id
   return (
     <div class="model-picker">
       <h1>Pick a model:</h1>
@@ -22,7 +23,7 @@ export default function ModelPicker({ modelChoices, onModelSelect }) {
           })}
         >
           {(model) => (
-            <li onClick={() => onModelSelect(model)}>{model.display_name}{model.context_length ? ', ' + abbreviateContextLength(model.context_length) + ' tokens' : ''}</li>
+            <li class={"model" + (currentModelID === model.id ? ' active' : '')} onClick={() => onModelSelect(model)}>{model.display_name}{model.context_length ? ', ' + abbreviateContextLength(model.context_length) + ' tokens' : ''}</li>
           )}
         </For>
       </ul>
