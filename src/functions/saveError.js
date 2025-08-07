@@ -23,7 +23,7 @@ export default async function saveError(error) {
     outputString = "~~~ Error Data:\n" + inspect(error);
   }
 
-  outputString += `\n\n~~~ Debug Info:\nOperating System: ${process.platform}\nApp Version: ${pkg.version}`;
+  outputString += `\n\n~~~ Debug Info:\nOperating System: ${process.platform}\nApp Version: ${pkg.version}\nOccurred: ${Date.now()}`;
   const filePath = join(
     errorDirectory,
     format(new Date(), "MMM do, Y HH-mma - ") + crypto.randomUUID() + ".txt"
