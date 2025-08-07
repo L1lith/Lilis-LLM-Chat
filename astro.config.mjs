@@ -15,15 +15,15 @@ import { join } from "path";
 // https://astro.build/config
 export default defineConfig({
   integrations: [solidJs()],
-  vite: {
-    define: {
-      //"process.env.DATA_DIRECTORY": JSON.stringify(userDataDirectory),
-    },
-    plugins: [
-      // nodePolyfills({
-      //   // To add only specific polyfills, add them here. If no option is passed, adds all polyfills
-      //   include: ["path"],
-      // }),
-    ],
-  },
+  // vite: {
+  //   define: {
+  //     //"process.env.DATA_DIRECTORY": JSON.stringify(userDataDirectory),
+  //   },
+  //   plugins: [
+  //     // nodePolyfills({
+  //     //   // To add only specific polyfills, add them here. If no option is passed, adds all polyfills
+  //     //   include: ["path"],
+  //     // }),
+  //   ],
+  // },
 });

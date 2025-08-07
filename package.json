@@ -16,28 +16,9 @@
   "author": "L1lith",
   "license": "ESMIT",
   "description": "An LLM Chat UI by Lili",
-  "nwbuild": {
-    "mode": "build",
-    "glob": false,
-    "platform": "win",
-    "arch": "x64",
-    "flavor": "sdk",
-    "srcDir": "./dist",
-    "outDir": "./bundle",
-    "logLevel": "error",
-    "window": {
-      "icon": "./NWJS/llm-chat-logo.ico"
-    },
-    "app": {
-      "icon": "./NWJS/llm-chat-logo.ico"
-    }
-  },
-  "icons": {
-    "256": "favicon.png"
-  },
   "devDependencies": {
     "astro": "^5.12.8",
-    "nw-builder": "^4.13.16"
+    "electron-builder": "^26.0.12"
   },
   "dependencies": {
     "@astrojs/solid-js": "^5.1.0",
