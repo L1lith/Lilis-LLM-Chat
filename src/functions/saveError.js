@@ -15,7 +15,7 @@ export default async function saveError(error) {
   if (error instanceof Error) {
     outputString = `~~~ Error Object:`;
     Object.getOwnPropertyNames(error).forEach((prop) => {
-      outputString += `\n\n## Property "${prop}":\n` + inspect(error[prop]);
+      outputString += `\n\n## Property "${prop}":\n` + typeof error[prop] == 'string' ? '"'+ error[prop] + '"' : inspect(error[prop]);
     });
   } else {
     outputString = "~~~ Error Data:\n" + inspect(error);
