@@ -31,7 +31,7 @@
     },
     "win": {
       "target": "nsis",
-      "icon": "icon.ico"
+      "icon": "512x512.ico"
     },
     "linux": {
       "target": [
