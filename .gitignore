@@ -4,6 +4,8 @@ bundle/
 cache/
 # generated types
 .astro/
+app/package.json
+dist-electron/
 
 # dependencies
 node_modules/

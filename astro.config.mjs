@@ -15,6 +15,8 @@ import { join } from "path";
 // https://astro.build/config
 export default defineConfig({
   integrations: [solidJs()],
+  output: "static",
+
   // vite: {
   //   define: {
   //     //"process.env.DATA_DIRECTORY": JSON.stringify(userDataDirectory),

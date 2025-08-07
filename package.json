@@ -4,20 +4,42 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "npm run build:nwprep && .\\SDK\\nw.exe ./dist",
-    "astro:defaultdev": "astro dev",
-    "build:nwprep": "node ./NWJS/prepNW.js && astro build && node ./NWJS/buildNW.js",
-    "build": "npm run build:nwprep && node ./NWJS/runBuilder.js && cd ./bundle && npm install",
-    "preview": "astro preview",
-    "astro": "astro",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "astro dev",
+    "build:web": "astro build",
+    "build:electron": "node prepareElectronApp.js && electron-builder",
+    "build": "npm run build:web && npm run build:electron",
+    "start": "electron app"
   },
   "keywords": [],
   "author": "L1lith",
   "license": "ESMIT",
   "description": "An LLM Chat UI by Lili",
+  "build": {
+    "appId": "com.webslc.l1lith.lilis-llm-chat",
+    "productName": "Lili's LLM Chat",
+    "directories": {
+      "app": "app",
+      "output": "dist-electron"
+    },
+    "files": [
+      "**/*"
+    ],
+    "mac": {
+      "target": "dmg"
+    },
+    "win": {
+      "target": "nsis"
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ]
+    }
+  },
   "devDependencies": {
     "astro": "^5.12.8",
+    "electron": "^37.2.6",
     "electron-builder": "^26.0.12"
   },
   "dependencies": {
