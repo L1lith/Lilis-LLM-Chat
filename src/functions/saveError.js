@@ -1,5 +1,6 @@
 import getDataDirectory from "./getDataDirectory";
 import { format } from "date-fns";
+import pkg from "../../package.json" with {type: 'json'}
 
 export default async function saveError(error) {
   const { join } = require("path");
@@ -20,9 +21,7 @@ export default async function saveError(error) {
     outputString = "~~~ Error Data:\n" + inspect(error);
   }
 
-  console.log(
-    format(new Date(), "MMM do, Y HH-mma - ") + crypto.randomUUID() + ".txt"
-  );
+  outputString += `\n\n~~~ Debug Info:\nOperating System: ${process.platform}\nApp Version: ${pkg.version}`;
   const filePath = join(
     errorDirectory,
     format(new Date(), "MMM do, Y HH-mma - ") + crypto.randomUUID() + ".txt"

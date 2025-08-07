@@ -62,7 +62,7 @@ export default function Chat() {
 
   const handleError = (error) => {
     console.error(error);
-    createStatusMessage("Error: " + String(error), "error", 5000);
+    createStatusMessage((String(error).startsWith('Error: ') ? '' : 'Error: ') + String(error), "error", 5000);
     saveError(error).catch(console.error);
   };
 
