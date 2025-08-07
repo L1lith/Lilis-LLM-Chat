@@ -23,7 +23,7 @@ export default function ModelPicker({ modelChoices, onModelSelect, currentModel}
           })}
         >
           {(model) => (
-            <li class={"model" + (currentModelID === model.id ? ' active' : '')} onClick={() => onModelSelect(model)}>{model.display_name}{model.context_length ? ', ' + abbreviateContextLength(model.context_length) + ' tokens' : ''}</li>
+            <li class={"model" + (currentModelID && currentModelID === model.id ? ' active' : '')} onClick={() => onModelSelect(model)}>{model.display_name}{model.context_length ? ', ' + abbreviateContextLength(model.context_length) + ' tokens' : ''}</li>
           )}
         </For>
       </ul>
