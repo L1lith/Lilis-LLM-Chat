@@ -3,6 +3,7 @@ import { defineConfig } from "astro/config";
 import solidJs from "@astrojs/solid-js";
 //import { importToRequirePlugin } from "vite-plugin-import-to-require";
 import { join } from "path";
+import electron from "astro-electron";
 
 // const userDataDirectory = join(
 //   process.env.APPDATA ||
@@ -14,9 +15,14 @@ import { join } from "path";
 
 // https://astro.build/config
 export default defineConfig({
-  integrations: [solidJs()],
+  integrations: [
+    solidJs(),
+    electron({
+      main: { entry: "app/main.js" },
+      preload: { input: "app/preload.js" },
+    }),
+  ],
   output: "static",
-
   // vite: {
   //   define: {
   //     //"process.env.DATA_DIRECTORY": JSON.stringify(userDataDirectory),

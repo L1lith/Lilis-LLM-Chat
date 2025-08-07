@@ -39,6 +39,7 @@
   },
   "devDependencies": {
     "astro": "^5.12.8",
+    "astro-electron": "^0.5.0",
     "electron": "^37.2.6",
     "electron-builder": "^26.0.12"
   },
