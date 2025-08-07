@@ -10,7 +10,6 @@ import "../styles/chat.scss";
 import ConversationTray from "./ConversationTray";
 import Settings from "./Settings";
 import saveConversation from "../functions/saveConversation";
-import db from "../../database";
 import ModelPicker from "./ModelPicker";
 import DotTyping from "./DotTyping";
 import convertMessagesToOpenAIFormat from "../functions/convertMessagesToOpenAIFormat";
@@ -18,6 +17,8 @@ import saveError from "../functions/saveError";
 import pkg from '../../package.json'
 import getLatestPackage from "../functions/getLatestPackage";
 import {mkdir, randomUUID, openAIRequest} from '../functions/fs'
+import syncToJSON from "../functions/syncToJSON";
+import db from "../../database";
 
 function getStartingAPI() {
   if (!db.currentAPI || db.currentAPI === "null") return null;
@@ -57,8 +58,10 @@ export default function Chat() {
   };
 
   onMount(() => {
-    console.log(window.electronAPI)
-    setCurrentAPI(getStartingAPI());
+    syncToJSON(db, 'lilis-llm-chat-config-private.json').then(dbReady => {
+      setCurrentAPI(getStartingAPI());
+    }).catch(handleError)
+    window.db = db
     mkdir("chats");
     getLatestPackage().then(newPkg => {
       console.log('got package', newPkg, pkg.version, newPkg.version)
@@ -73,13 +76,13 @@ export default function Chat() {
     input.focus();
   };
   onMount(() => {
-    if (typeof global?.window !== "undefined") {
+    if (this?.window) {
       window.addEventListener("focus", autoFocus);
       autoFocus();
     }
   });
   onCleanup(() => {
-    if (typeof global?.window !== "undefined") {
+    if (this?.window) {
       window.removeEventListener("focus", autoFocus);
     }
   });

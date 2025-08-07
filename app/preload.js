@@ -10,7 +10,7 @@ contextBridge.exposeInMainWorld("electronAPI", {
   rm: (path) => ipcRenderer.invoke("rm", path),
   mkdir: (dirPath) => ipcRenderer.invoke("mkdir", dirPath),
   stat: (filePath) => ipcRenderer.invoke("stat", filePath), // 👈 new method
-  openFileExplorer: (path) => ipcRenderer.invoke("open-file-explorer", path),
+  openExplorer: (path) => ipcRenderer.invoke("open-file-explorer", path),
   openURL: (url) => ipcRenderer.invoke("open-url", url),
   join: (...args) => ipcRenderer.invoke("join", ...args),
   inspect: (...args) => ipcRenderer.invoke("inspect", ...args),

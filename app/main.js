@@ -1,5 +1,5 @@
 const { BrowserWindow, app, ipcMain } = require("electron");
-const { join } = require("path");
+const { join, resolve, dirname } = require("path");
 const openURL = require("./openURL");
 const openExplorer = require("open-file-explorer");
 const fs = require("fs/promises");
@@ -17,7 +17,7 @@ userDataDirectory = join(
 );
 
 function resolveSafePath(relativePath) {
-  const fullPath = path.resolve(userDataDirectory, relativePath);
+  const fullPath = resolve(userDataDirectory, relativePath);
   if (!fullPath.startsWith(userDataDirectory)) {
     throw new Error("Access denied: Path outside allowed directory.");
   }
@@ -45,7 +45,7 @@ ipcMain.handle("read-file", async (_, filename) => {
 // 💾 Write file (recursive)
 ipcMain.handle("write-file", async (_, filename, content) => {
   const filePath = resolveSafePath(filename);
-  const dir = path.dirname(filePath);
+  const dir = dirname(filePath);
   await fs.mkdir(dir, { recursive: true });
   await fs.writeFile(filePath, content, "utf-8");
   return true;

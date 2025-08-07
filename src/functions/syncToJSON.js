@@ -8,7 +8,7 @@ async function syncToJSON(store, jsonPath) {
     if (typeof data != "object" && data === null)
       throw new Error("json data should be an object");
   } catch (err) {
-    if (err?.code !== "ENOENT") throw err;
+    if (err?.code !== "ENOENT" && !String(err).includes("ENOENT")) throw err;
   }
   if (data !== null) {
     const oldWarn = console.warn;
