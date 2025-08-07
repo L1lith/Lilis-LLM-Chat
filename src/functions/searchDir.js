@@ -1,6 +1,6 @@
+import { readdir, stat, join } from "./fs";
+
 export default async function searchDir(dir, check = () => true) {
-  const { readdir, stat } = require("fs/promises");
-  const { join } = require("path");
   // read the contents of the directory
   const files = await readdir(dir);
   let output = [];

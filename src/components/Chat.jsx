@@ -15,9 +15,9 @@ import ModelPicker from "./ModelPicker";
 import DotTyping from "./DotTyping";
 import convertMessagesToOpenAIFormat from "../functions/convertMessagesToOpenAIFormat";
 import saveError from "../functions/saveError";
-import getDataDirectory from "../functions/getDataDirectory";
 import pkg from '../../package.json'
 import getLatestPackage from "../functions/getLatestPackage";
+import {mkdir, randomUUID, openAIRequest} from '../functions/fs'
 
 function getStartingAPI() {
   if (!db.currentAPI || db.currentAPI === "null") return null;
@@ -37,27 +37,14 @@ export default function Chat() {
   const [modelChoices, setModelChoices] = createSignal(null);
   const [AIThinking, setAIThinking] = createSignal(false);
 
-  let openAIClient = null;
-  let conversationsDir = null;
   createEffect(() => {
     if (currentAPI() && currentAPI !== "null") {
-      const OpenAI = require("openai");
-      openAIClient = new OpenAI({
-        baseURL: currentAPI().URL,
-        apiKey: currentAPI().key,
-        dangerouslyAllowBrowser: true,
-      });
-      window.openAIClient = openAIClient;
-      openAIClient.models
-        .list()
-        .then((data) => {
+      openAIRequest(currentAPI(), 'models.list').then((data) => {
           setModelChoices(data.body.filter((model) => model.type === "chat"));
           console.log("got models", data.body);
         })
         .catch(handleError);
     } else {
-      openAIClient = null;
-      window.openAIClient = openAIClient;
       setModelChoices(null);
       setCurrentModel(null);
     }
@@ -70,11 +57,9 @@ export default function Chat() {
   };
 
   onMount(() => {
-    const { join } = require("path");
-    const { mkdirSync } = require("fs");
+    console.log(window.electronAPI)
     setCurrentAPI(getStartingAPI());
-    conversationsDir = join(getDataDirectory(), "chats");
-    mkdirSync(conversationsDir, { recursive: true });
+    mkdir("chats");
     getLatestPackage().then(newPkg => {
       console.log('got package', newPkg, pkg.version, newPkg.version)
       if (newPkg.version !== pkg.version) {
@@ -129,12 +114,11 @@ export default function Chat() {
   };
   const appendNewMessage = (message) => {
     let convo = conversation();
-    const crypto = require("crypto");
     if (convo === null) {
       convo = { created: Date.now(), messages: [], id: crypto.randomUUID() };
     }
     if (!("created" in message)) message.created = Date.now();
-    message.id = crypto.randomUUID();
+    message.id = randomUUID();
     convo.messages = convo.messages.concat([message]);
     convo.lastActive = Date.now();
     setMessages(convo.messages);
@@ -182,10 +166,10 @@ export default function Chat() {
     setAIThinking(true);
     let response;
     try {
-      response = await openAIClient.chat.completions.create({
+      response = await openAIRequest(currentAPI(), 'chat.completions.create', {
         model: currentModel().id,
         messages: convertMessagesToOpenAIFormat(messages()),
-      });
+      })
     } catch (error) {
       handleError(error);
       setAIThinking(false);

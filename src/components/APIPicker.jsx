@@ -5,6 +5,7 @@ import isValidURL from "../functions/isValidURL";
 import db from "../../database";
 import ToggleSwitch from "./ToggleSwitch";
 import saveError from '../functions/saveError'
+import { randomUUID } from "../functions/fs";
 
 export default function APIPicker(props) {
   const {setCurrentAPI, currentAPI} = props
@@ -39,8 +40,7 @@ export default function APIPicker(props) {
     setFormError(foundFormError)
     saveError(foundFormError)
     if (foundFormError) return // Don't let the form submit if the data is invalid
-    const crypto = require('crypto')
-    formData.id = crypto.randomUUID()
+    formData.id = randomUUID()
     // We've received a seemingly valid API config let's add it to the list now     
     setAPIList(APIList().concat([formData]))
     setCurrentView(null)

@@ -1,9 +1,11 @@
-function syncToJSON(store, jsonPath) {
-  const { readFileSync, writeFileSync } = require("fs");
+import { readFile, writeFile } from "./fs";
+
+async function syncToJSON(store, jsonPath) {
   let data = null;
   try {
-    data = JSON.parse(readFileSync(jsonPath));
-    if (typeof data != "object")
+    const plain = await readFile(jsonPath);
+    data = JSON.parse(plain);
+    if (typeof data != "object" && data === null)
       throw new Error("json data should be an object");
   } catch (err) {
     if (err?.code !== "ENOENT") throw err;
@@ -18,7 +20,7 @@ function syncToJSON(store, jsonPath) {
   }
 
   store.on("*", () => {
-    writeFileSync(jsonPath, JSON.stringify(store));
+    writeFile(jsonPath, JSON.stringify(store)).catch(console.error);
   });
   return store;
 }

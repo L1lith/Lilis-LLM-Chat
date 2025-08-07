@@ -2,12 +2,12 @@ import { createEffect, createSignal, onMount } from "solid-js";
 import { format, compareAsc } from "date-fns"
 import timeAgo from 'node-time-ago'
 import searchDir from '../functions/searchDir'
-import getDataDirectory from "../functions/getDataDirectory";
 import "../styles/conversationTray.scss"
 import Pen from '../icons/pen.svg?raw'
 import Checkmark from '../icons/checkmark.svg?raw'
 import saveConversation from '../functions/saveConversation'
 import saveError from '../functions/saveError'
+import {readFile, join, rm} from '../functions/fs'
 
 export default function ConversationTray(props) {
     const activeConversation = props.conversation
@@ -20,9 +20,7 @@ export default function ConversationTray(props) {
     return conversations.sort((convoA, convoB) => (convoB.lastActive || convoB.created) - (convoA.lastActive || convoA.created))
   }
   onMount(async ()=>{
-    const {join} = require('path')
-    const chatsPaths = await searchDir(join(getDataDirectory(), 'chats'), info => info.shortPath.endsWith('.json') && info.isFile)
-    const {readFile} = require('fs/promises')
+    const chatsPaths = await searchDir("chats", info => info.shortPath.endsWith('.json') && info.isFile)
     const conversations = await Promise.all(chatsPaths.map(async chatPath => JSON.parse(await readFile(chatPath.fullPath, 'utf8'))))
     setConversations(sortConversations(conversations))
   })
@@ -38,9 +36,7 @@ export default function ConversationTray(props) {
   const deleteConversation = conversation=>{
     if (activeConversation()?.id === conversation.id) setConversation(null)
     setConversations(sortConversations(conversations().filter(check => check.id !== conversation.id)))
-    const {rm} = require('fs/promises')
-    const {join} = require('path')
-    const chatFile = join(getDataDirectory(), 'chats', conversation.id + '.json')
+    const chatFile = join('chats', conversation.id + '.json')
     rm(chatFile).catch(error => {
       console.error(error)
       saveError(error)

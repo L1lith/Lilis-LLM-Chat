@@ -1,14 +1,11 @@
-import getDataDirectory from "./getDataDirectory";
 import { format } from "date-fns";
 import pkg from "../../package.json" with {type: 'json'}
+import {mkdir, writeFile, join, randomUUID} from '../functions/fs'
 
 export default async function saveError(error) {
-  const { join } = require("path");
-  const { mkdir, writeFile } = require("fs/promises");
-  const { inspect } = require("util");
-  const errorDirectory = join(getDataDirectory(), "errors");
+  const { inspect } = window.electronAPI;
+  const errorDirectory = "errors";
   await mkdir(errorDirectory, { recursive: true });
-  const crypto = require("crypto");
 
   console.log("got error", error, error instanceof Error);
   let outputString;
@@ -26,7 +23,7 @@ export default async function saveError(error) {
   outputString += `\n\n~~~ Debug Info:\nOperating System: ${process.platform}\nApp Version: ${pkg.version}\nOccurred: ${Date.now()}`;
   const filePath = join(
     errorDirectory,
-    format(new Date(), "MMM do, Y HH-mma - ") + crypto.randomUUID() + ".txt"
+    format(new Date(), "MMM do, Y HH-mma - ") + randomUUID() + ".txt"
   );
   await writeFile(filePath, outputString);
 }
