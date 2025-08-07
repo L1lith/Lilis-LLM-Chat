@@ -37,8 +37,7 @@
   },
   "devDependencies": {
     "astro": "^5.12.8",
-    "nw-builder": "^4.13.16",
-    "vite-plugin-node-polyfills": "^0.24.0"
+    "nw-builder": "^4.13.16"
   },
   "dependencies": {
     "@astrojs/solid-js": "^5.1.0",
@@ -50,7 +49,6 @@
     "open-file-explorer": "^1.0.2",
     "openai": "^5.11.0",
     "sass": "^1.89.2",
-    "solid-js": "^1.9.7",
-    "vite-plugin-import-to-require": "^1.0.0"
+    "solid-js": "^1.9.7"
   }
 }
