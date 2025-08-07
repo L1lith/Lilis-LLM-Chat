@@ -22,8 +22,8 @@ export async function writeFile(filename, content) {
  * @param {string} dirPath - Relative path
  * @returns {Promise<Array<{name: string, isFile: boolean, isDirectory: boolean}>>}
  */
-export async function readdir(dirPath = ".") {
-  return await window.electronAPI.ls(dirPath);
+export function ls(dirPath = ".") {
+  return window.electronAPI.ls(dirPath);
 }
 
 /**

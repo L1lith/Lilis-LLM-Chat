@@ -21,6 +21,7 @@ export default function ConversationTray(props) {
   }
   onMount(async ()=>{
     const chatsPaths = await searchDir("chats", info => info.shortPath.endsWith('.json') && info.isFile)
+    console.log(chatsPaths)
     const conversations = await Promise.all(chatsPaths.map(async chatPath => JSON.parse(await readFile(chatPath.fullPath, 'utf8'))))
     setConversations(sortConversations(conversations))
   })

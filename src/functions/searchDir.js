@@ -1,32 +1,30 @@
-import { readdir, stat, join } from "./fs";
+import { ls, stat, join } from "./fs";
 
 export default async function searchDir(dir, check = () => true) {
   // read the contents of the directory
-  const files = await readdir(dir);
+  const files = await ls(dir);
   let output = [];
 
   // search through the files
   await Promise.all(
-    files.map(async (shortPath) => {
-      const fullPath = join(dir, shortPath);
+    files.map(async (details) => {
+      const fullPath = await join(dir, details.name);
 
       // get the file stats
       const fileStat = await stat(fullPath);
-      let extension = shortPath.split(".");
+      let extension = details.name.split(".");
       extension = extension[extension.length - 1] || null;
-      const details = {
+      const fullDetails = {
         fullPath,
-        shortPath,
-        isDirectory: fileStat.isDirectory(),
-        isFile: fileStat.isFile(),
-        stat: fileStat,
+        shortPath: details.name,
         extension,
+        ...fileStat,
       };
-      if (await check(details)) {
-        output.push(details);
+      if (await check(fullDetails)) {
+        output.push(fullDetails);
       }
       // if the file is a directory, recursively search the directory
-      if (details.isDirectory)
+      if (fullDetails.isDirectory)
         output = output.concat(await searchDir(fullPath, check));
     })
   );
