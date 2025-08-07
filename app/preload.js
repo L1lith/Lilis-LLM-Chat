@@ -15,6 +15,7 @@ contextBridge.exposeInMainWorld("electronAPI", {
   join: (...args) => ipcRenderer.invoke("join", ...args),
   inspect: (...args) => ipcRenderer.invoke("inspect", ...args),
   randomUUID: () => ipcRenderer.invoke("randomUUID"),
-  openAIRequest: (apiKey, method, args) =>
-    ipcRenderer.invoke("openai-request", apiKey, method, args),
+  openAIRequest: (apiConfig, method, ...args) =>
+    ipcRenderer.invoke("openai-request", apiConfig, method, ...args),
+  getPlatform: () => ipcRenderer.invoke("get-platform"),
 });

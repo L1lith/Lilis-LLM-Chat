@@ -9,7 +9,7 @@ import { randomUUID } from "../functions/fs";
 
 export default function APIPicker(props) {
   const {setCurrentAPI, currentAPI} = props
-  const [APIList, setAPIList] = createSignal(db.APIs || []);
+  const [APIList, setAPIList] = createSignal(db?.APIs || []);
   const [currentView, setCurrentView] = createSignal(null)
   const [formError, setFormError] = createSignal(null)
   const [activeToggleID, setActiveToggleID] = createSignal(currentAPI()?.id || null)

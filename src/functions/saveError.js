@@ -1,6 +1,6 @@
 import { format } from "date-fns";
 import pkg from "../../package.json" with {type: 'json'}
-import {mkdir, writeFile, join, randomUUID} from '../functions/fs'
+import {mkdir, writeFile, join, randomUUID, getPlatform} from '../functions/fs'
 
 export default async function saveError(error) {
   const { inspect } = window.electronAPI;
@@ -20,7 +20,7 @@ export default async function saveError(error) {
     outputString = "~~~ Error Data:\n" + inspect(error);
   }
 
-  outputString += `\n\n~~~ Debug Info:\nOperating System: ${process.platform}\nApp Version: ${pkg.version}\nOccurred: ${Date.now()}`;
+  outputString += `\n\n~~~ Debug Info:\nOperating System: ${getPlatform()}\nApp Version: ${pkg.version}\nOccurred: ${Date.now()}`;
   const filePath = join(
     errorDirectory,
     format(new Date(), "MMM do, Y HH-mma - ") + randomUUID() + ".txt"

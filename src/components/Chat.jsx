@@ -161,7 +161,7 @@ export default function Chat() {
   };
   const getAIResponse = async () => {
     if (
-      !currentAPI() ||
+      !currentAPI() || currentAPI() === 'null' ||
       !currentModel ||
       !Array.isArray(messages() || messages().length < 1)
     )

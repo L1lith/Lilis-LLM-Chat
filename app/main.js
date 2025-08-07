@@ -119,30 +119,32 @@ ipcMain.handle("open-url", (_, url) => openURL(url));
 ipcMain.handle("join", (_, ...args) => join(...args));
 ipcMain.handle("inspect", (_, ...args) => inspect(...args));
 ipcMain.handle("randomUUID", () => crypto.randomUUID());
-ipcMain.handle("openai-request", async (_event, apiConfig, method, args) => {
-  try {
-    const openai = new OpenAI({
-      apiKey: apiConfig.key || apiConfig.apiKey,
-      baseURL: apiConfig.URL || apiConfig.baseURL,
-    });
+ipcMain.handle("get-platform", () => process.platform);
+ipcMain.handle("openai-request", async (_event, apiConfig, method, ...args) => {
+  console.log("Got OpenAI Request", apiConfig, method, args);
+  const openAIConfig = {
+    apiKey: apiConfig.key || apiConfig.apiKey,
+    baseURL: apiConfig.URL || apiConfig.baseURL,
+  };
+  const openai = new OpenAI(openAIConfig);
 
-    // Dynamically resolve method (e.g. "chat.completions.create")
-    const methodParts = method.split(".");
-    let target = openai;
-    for (const part of methodParts) {
-      target = target[part];
-    }
-
-    if (typeof target !== "function") {
-      throw new Error("Invalid OpenAI method");
-    }
-
-    const result = await target.call(openai, args);
-    return { success: true, result };
-  } catch (err) {
-    console.error("OpenAI IPC error:", err);
-    return { success: false, error: err.message };
+  // Dynamically resolve method (e.g. "chat.completions.create")
+  const methodParts = method.split(".");
+  let target = openai;
+  let parent = null;
+  for (const part of methodParts) {
+    if (!(part in target))
+      throw new Error(`Invalid part "${part}" of method "${method}"`);
+    parent = target;
+    target = target[part];
   }
+
+  if (typeof target !== "function") {
+    throw new Error("Invalid OpenAI method");
+  }
+
+  const result = await target.call(parent || openai, ...args);
+  return result;
 });
 
 app.whenReady().then(async () => {

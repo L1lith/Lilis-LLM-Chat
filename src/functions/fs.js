@@ -71,3 +71,7 @@ export function openURL(url) {
 export function openAIRequest(...args) {
   return window.electronAPI.openAIRequest(...args);
 }
+
+export function getPlatform() {
+  return window.electronAPI.getPlatform();
+}
