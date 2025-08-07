@@ -10,7 +10,7 @@ function abbreviateContextLength(contextLength) {
 }
 
 export default function ModelPicker({ modelChoices, onModelSelect, currentModel}) {
-  const currentModelID = currentModel().id
+  const currentModelID = currentModel()?.id
   return (
     <div class="model-picker">
       <h1>Pick a model:</h1>
