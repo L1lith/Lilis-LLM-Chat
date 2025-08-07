@@ -12,7 +12,8 @@
   },
   "keywords": [],
   "author": "L1lith",
-  "license": "ESMIT",
+  "license": "ESMV",
+  "license_url": "https://github.com/L1lith/ESMV",
   "description": "An LLM Chat UI by Lili",
   "build": {
     "appId": "com.webslc.l1lith.lilis-llm-chat",
