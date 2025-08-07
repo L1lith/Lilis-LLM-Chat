@@ -14,6 +14,7 @@ import db from "../../database";
 import ModelPicker from "./ModelPicker";
 import DotTyping from "./DotTyping";
 import convertMessagesToOpenAIFormat from "../functions/convertMessagesToOpenAIFormat";
+import saveError from "../functions/saveError";
 
 function getStartingAPI() {
   if (!db.currentAPI || db.currentAPI === "null") return null;
@@ -31,7 +32,7 @@ export default function Chat() {
   const [currentModel, setCurrentModel] = createSignal(null);
   const [statusMessages, setStatusMessages] = createSignal([]);
   const [modelChoices, setModelChoices] = createSignal(null);
-  const [AIThinking, setAIThinking] = createSignal(false)
+  const [AIThinking, setAIThinking] = createSignal(false);
 
   let openAIClient = null;
   let conversationsDir = null;
@@ -44,10 +45,13 @@ export default function Chat() {
         dangerouslyAllowBrowser: true,
       });
       window.openAIClient = openAIClient;
-      openAIClient.models.list().then((data) => {
-        setModelChoices(data.body.filter(model => model.type === "chat"));
-        console.log("got models", data.body);
-      });
+      openAIClient.models
+        .list()
+        .then((data) => {
+          setModelChoices(data.body.filter((model) => model.type === "chat"));
+          console.log("got models", data.body);
+        })
+        .catch(handleError);
     } else {
       openAIClient = null;
       window.openAIClient = openAIClient;
@@ -56,9 +60,11 @@ export default function Chat() {
     }
   });
 
-  const handleError = error => {
-
-  }
+  const handleError = (error) => {
+    console.error(error);
+    createStatusMessage("Error: " + String(error), "error", 5000);
+    saveError(error).catch(console.error);
+  };
 
   onMount(() => {
     const { join } = require("path");
@@ -132,19 +138,11 @@ export default function Chat() {
     const prompt = input.value.trim();
     if (!prompt.trim()) return;
     if (currentAPI() === null) {
-      return createStatusMessage(
-        "You must create and select an API in the settings",
-        "error",
-        5000
-      );
+      return handleError("You must create and select an API in the settings");
     }
 
     if (currentModel() === null) {
-      return createStatusMessage(
-        "You must select a model, click the robot",
-        "error",
-        5000
-      );
+      return handleError("You must select a model, click the robot");
     }
 
     appendNewMessage({ from: "User", content: input.value });
@@ -155,8 +153,7 @@ export default function Chat() {
     try {
       AIResponse = await getAIResponse();
     } catch (err) {
-      console.error(err);
-      createStatusMessage(String(err), "error", 8000);
+      handleError(err);
       //appendNewMessage({ from: "System", content: String(err), type: "error" });
       setAwaitingResponse(false);
       autoFocus();
@@ -167,37 +164,38 @@ export default function Chat() {
     autoFocus();
   };
   const getAIResponse = async () => {
-    if (!currentAPI() || !currentModel || (!Array.isArray(messages() || messages().length < 1))) throw new Error("Missing the model or the API or the messages.")
-    setAIThinking(true)
-    let response
+    if (
+      !currentAPI() ||
+      !currentModel ||
+      !Array.isArray(messages() || messages().length < 1)
+    )
+      throw new Error("Missing the model or the API or the messages.");
+    setAIThinking(true);
+    let response;
     try {
       response = await openAIClient.chat.completions.create({
-      model: currentModel().id,
-      messages: convertMessagesToOpenAIFormat(messages()),
-    });
-    } catch(error) {
-      createStatusMessage(
-        String(error),
-        "error",
-        5000
-      );
-      setAIThinking(false)
-      throw error
+        model: currentModel().id,
+        messages: convertMessagesToOpenAIFormat(messages()),
+      });
+    } catch (error) {
+      handleError(error);
+      setAIThinking(false);
+      throw error;
     }
-    setAIThinking(false)
+    setAIThinking(false);
     return response.choices[0].message.content;
   };
   let isShiftDown = false;
   const handleKeyDown = (event) => {
     const { key } = event;
     if (key === "Shift") {
-        isShiftDown = true;
+      isShiftDown = true;
     } else if (key === "Enter") {
-        if (!isShiftDown /*&& !input.value.includes('\n')*/) {
-            event.preventDefault();
-            // Trigger Submit
-            submitButton.click();
-        }
+      if (!isShiftDown /*&& !input.value.includes('\n')*/) {
+        event.preventDefault();
+        // Trigger Submit
+        submitButton.click();
+      }
     }
     //console.log('down', key, isShiftDown)
   };
@@ -308,10 +306,18 @@ export default function Chat() {
                   "model-selector " +
                   (currentAPI() === null
                     ? "error"
-                    : currentModel() === null ? 'ready' : "active")
+                    : currentModel() === null
+                    ? "ready"
+                    : "active")
                 }
-                
-              ><span innerHTML={AIChat}/>{AIThinking() ? <span class="dots"><DotTyping/></span> : null}</button>
+              >
+                <span innerHTML={AIChat} />
+                {AIThinking() ? (
+                  <span class="dots">
+                    <DotTyping />
+                  </span>
+                ) : null}
+              </button>
             </span>
             <textarea
               onInput={autoAdjustInputHeight}
