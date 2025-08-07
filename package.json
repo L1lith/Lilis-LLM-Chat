@@ -7,7 +7,7 @@
     "dev": "npm run build:nwprep && .\\SDK\\nw.exe ./dist",
     "astro:defaultdev": "astro dev",
     "build:nwprep": "node ./NWJS/prepNW.js && astro build && node ./NWJS/buildNW.js",
-    "build": "npm run build:nwprep && node ./NWJS/runBuilder.js",
+    "build": "npm run build:nwprep && node ./NWJS/runBuilder.js && cd ./bundle && npm install",
     "preview": "astro preview",
     "astro": "astro",
     "test": "echo \"Error: no test specified\" && exit 1"
