@@ -96,7 +96,7 @@ export default function APIPicker(props) {
               <span class="title">- {api.name || `API #${i + 1}`} -</span>
               <span class="url"><strong>URL:</strong> {api.URL}</span>
               <span class="key"><strong>Key:</strong> {api.key}</span>
-              <span class="controls"><ToggleSwitch onToggle={active => toggleAPI(api, active)} activeToggleID={activeToggleID} toggleID={api.id} baseWidth="4em"/><button onClick={()=>{deleteAPI(api);}} class="delete-api" innerHTML={Trash}/></span>
+              <span class="controls"><ToggleSwitch onToggle={active => toggleAPI(api, active)} activeToggleID={activeToggleID} toggleID={api.id} baseWidth="6em"/><button onClick={()=>{deleteAPI(api);}} class="delete-api" innerHTML={Trash}/></span>
             </li>
           ))}
         </ul>

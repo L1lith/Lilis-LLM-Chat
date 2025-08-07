@@ -23,8 +23,8 @@ export default function Settings(props) {
         <h1>Settings</h1>
         <APIPicker setCurrentAPI={setCurrentAPI} currentAPI={currentAPI}/>
         <button onClick={()=>openExplorer(".")}>Open Data Directory</button>
-        <button onClick={()=>openLink("https://github.com/L1lith/Lilis-LLM-Chat")}>View Source Code on GitHub</button>
-        <button onClick={()=>openLink("https://github.com/L1lith/ESMV")}>View ESMIT Eco-Friendly License (this app's license)</button>
+        <button onClick={()=>openLink("https://github.com/L1lith/Lilis-LLM-Chat")}>View Source Code on GitHub (and give me a star? it's free!)</button>
+        <button onClick={()=>openLink("https://github.com/L1lith/ESMV")}>View ESMV Eco-Friendly License (this app's license)</button>
         <span>App Version: {pkg.version}{latestVersion() === null || latestVersion() === pkg.version ? '' : ' (Outdated)'}</span>
         <span>Latest App Version: {latestVersion() === null ? 'loading...' : latestVersion()}</span>
     </div>

@@ -1,4 +1,25 @@
 .model-picker {
+  display: flex;
+  flex-direction: column;
+  .search {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 1em;
+    justify-content: center;
+    input {
+      text-align: center;
+      flex-grow: 0.5;
+    }
+    .icon {
+      margin-left: 0.5em;
+      display: inline;
+      svg {
+        max-width: 1em;
+        max-height: 1em;
+        margin-bottom: -0.3em;
+      }
+    }
+  }
   ul {
     list-style: none;
     li {
