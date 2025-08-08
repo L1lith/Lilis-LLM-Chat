@@ -10,6 +10,7 @@ jobs:
       DEBUG: electron-builder
     timeout-minutes: 10
     strategy:
+      fail-fast: false
       matrix:
         os: [macos-latest, ubuntu-latest, windows-latest]
 
