@@ -12,7 +12,10 @@
     "start": "electron app"
   },
   "keywords": [],
-  "author": "L1lith",
+  "author": {
+    "name": "Lili aka L1lith on Github",
+    "email": "redacted@redacted.com"
+  },
   "license": "ESMV",
   "license_url": "https://github.com/L1lith/ESMV",
   "description": "An LLM Chat UI by Lili",

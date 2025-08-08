@@ -22,9 +22,15 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Copy dependencies to app
+      - name: Copy node_modules to app folder cross-platform
+        if: runner.os == 'Windows'
         run: |
-          cp -r ./node_modules ./app/
+          robocopy node_modules app\node_modules /E /NFL /NDL /NJH /NJS /nc /ns /np
+        shell: powershell
+
+      - name: Copy node_modules to app folder on Linux/Mac
+        if: runner.os != 'Windows'
+        run: cp -r node_modules app/
 
       - name: Build/release Electron app
         uses: johannesjo/action-electron-builder@v1
