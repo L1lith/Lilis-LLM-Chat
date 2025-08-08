@@ -91,6 +91,9 @@
       }
       .content {
         white-space: pre-wrap;
+        code {
+          white-space: pre-wrap;
+        }
       }
       &.user {
         align-items: flex-start;
