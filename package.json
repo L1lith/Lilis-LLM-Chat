@@ -17,6 +17,7 @@
   "license_url": "https://github.com/L1lith/ESMV",
   "description": "An LLM Chat UI by Lili",
   "build": {
+    "npmRebuild": false,
     "appId": "com.webslc.l1lith.lilis-llm-chat",
     "productName": "Lili's LLM Chat",
     "directories": {
