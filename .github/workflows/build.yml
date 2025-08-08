@@ -25,7 +25,8 @@ jobs:
       - name: Copy node_modules to app folder cross-platform
         if: runner.os == 'Windows'
         run: |
-          robocopy node_modules app\node_modules /E /NFL /NDL /NJH /NJS /nc /ns /np || exit 0
+          robocopy node_modules app\node_modules /E /NFL /NDL /NJH /NJS /nc /ns /np
+          if ($LASTEXITCODE -le 1) { exit 0 } else { exit $LASTEXITCODE }
         shell: powershell
 
       - name: Copy node_modules to app folder on Linux/Mac
