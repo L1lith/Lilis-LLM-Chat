@@ -159,6 +159,7 @@ ipcMain.handle("openai-request", async (_event, apiConfig, method, ...args) => {
 const allowedProtocols = ["file://", "devtools://", "chrome-extension://"];
 
 app.whenReady().then(async () => {
+  // Prevents loading external websites for the benefit of security and user experience
   session.defaultSession.webRequest.onBeforeRequest((details, callback) => {
     const url = details.url;
     if (allowedProtocols.some((protocol) => url.startsWith(protocol))) {
