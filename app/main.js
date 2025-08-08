@@ -1,4 +1,5 @@
 const { BrowserWindow, app, ipcMain, session } = require("electron");
+const { autoUpdater } = require("electron-updater");
 const { join, resolve, dirname } = require("path");
 const openURL = require("./openURL");
 const openExplorer = require("open-file-explorer");
@@ -169,4 +170,9 @@ app.whenReady().then(async () => {
   });
   await fs.mkdir(userDataDirectory, { recursive: true });
   createWindow();
+  autoUpdater.checkForUpdatesAndNotify();
+});
+
+autoUpdater.on("error", (error) => {
+  console.error("There was an error updating the application:", error);
 });
