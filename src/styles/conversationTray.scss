@@ -2,6 +2,9 @@
     .conversations {
         width: 100%;
         .conversation {
+            &:nth-child(even) {
+                background-color: #ffffff21;
+            }
             &.active {
                 background-color: #ffc0cb33;
             }

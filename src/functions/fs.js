@@ -75,3 +75,7 @@ export function openAIRequest(...args) {
 export function getPlatform() {
   return window.electronAPI.getPlatform();
 }
+
+export function getLatestPackage(...args) {
+  return window.electronAPI.getLatestPackage(...args);
+}

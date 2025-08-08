@@ -18,4 +18,6 @@ contextBridge.exposeInMainWorld("electronAPI", {
   openAIRequest: (apiConfig, method, ...args) =>
     ipcRenderer.invoke("openai-request", apiConfig, method, ...args),
   getPlatform: () => ipcRenderer.invoke("get-platform"),
+  getLatestPackage: (...args) =>
+    ipcRenderer.invoke("get-latest-package", ...args),
 });

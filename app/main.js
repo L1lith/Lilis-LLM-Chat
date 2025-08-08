@@ -1,4 +1,4 @@
-const { BrowserWindow, app, ipcMain } = require("electron");
+const { BrowserWindow, app, ipcMain, session } = require("electron");
 const { join, resolve, dirname } = require("path");
 const openURL = require("./openURL");
 const openExplorer = require("open-file-explorer");
@@ -6,6 +6,7 @@ const fs = require("fs/promises");
 const { inspect } = require("util");
 const crypto = require("crypto");
 const { OpenAI } = require("openai");
+const getLatestPackage = require("./getLatestPackage");
 
 const { APPDATA, HOME, platform } = process.env;
 userDataDirectory = join(
@@ -32,6 +33,12 @@ function createWindow() {
     webPreferences: {
       preload: join(__dirname, "preload.js"),
     },
+  });
+
+  win.webContents.on("will-navigate", (event, url) => {
+    if (!url.startsWith("file://") || !url.includes("/app.asar/")) {
+      event.preventDefault();
+    }
   });
 
   win.loadFile(join(__dirname, "dist", "index.html"));
@@ -121,6 +128,7 @@ ipcMain.handle("join", (_, ...args) => join(...args));
 ipcMain.handle("inspect", (_, ...args) => inspect(...args));
 ipcMain.handle("randomUUID", () => crypto.randomUUID());
 ipcMain.handle("get-platform", () => process.platform);
+ipcMain.handle("get-latest-package", (...args) => getLatestPackage(...args));
 ipcMain.handle("openai-request", async (_event, apiConfig, method, ...args) => {
   console.log("Got OpenAI Request", apiConfig, method, args);
   const openAIConfig = {
@@ -148,7 +156,16 @@ ipcMain.handle("openai-request", async (_event, apiConfig, method, ...args) => {
   return result;
 });
 
+const allowedProtocols = ["file://", "devtools://", "chrome-extension://"];
+
 app.whenReady().then(async () => {
+  session.defaultSession.webRequest.onBeforeRequest((details, callback) => {
+    const url = details.url;
+    if (allowedProtocols.some((protocol) => url.startsWith(protocol))) {
+      return callback({ cancel: false });
+    }
+    return callback({ cancel: true });
+  });
   await fs.mkdir(userDataDirectory, { recursive: true });
   createWindow();
 });
