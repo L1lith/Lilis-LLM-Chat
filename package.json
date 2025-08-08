@@ -6,8 +6,9 @@
   "scripts": {
     "dev": "astro dev",
     "build:web": "astro build",
-    "build:electron": "node prepareElectronApp.js && electron-builder",
-    "build": "npm run build:web && npm run build:electron",
+    "build:electron": "node prepareElectronApp.js && electron-builder --linux",
+    "build:manual": "npm run build:web && npm run build:electron",
+    "build": "npm run build:web && node prepareElectronApp.js",
     "start": "electron app"
   },
   "keywords": [],
