@@ -1,5 +1,4 @@
 # Lili's LLM Chat App
----------------------
 Why might my LLM chat app be perfect for you?  
 If you like any of these features then please consider giving it a chance:
 
