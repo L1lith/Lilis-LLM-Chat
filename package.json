@@ -7,8 +7,7 @@
     "dev": "astro dev",
     "build:web": "astro build",
     "build:electron": "node prepareElectronApp.js && electron-builder --linux",
-    "build:manual": "npm run build:web && npm run build:electron",
-    "build": "npm run build:web && node prepareElectronApp.js",
+    "build": "npm run build:web && npm run build:electron",
     "start": "electron app"
   },
   "keywords": [],
