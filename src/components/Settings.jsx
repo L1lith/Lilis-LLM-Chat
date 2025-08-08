@@ -39,6 +39,11 @@ export default function Settings(props) {
         <nav class="links">
           <ul>
             <li>
+              <button onClick={() => openLink("https://webslc.com/download-llm-chat-latest")}>
+                Download Latest App Version
+              </button>
+            </li>
+            <li>
               <button onClick={() => openExplorer(".")}>
                 Open Data Directory
               </button>
