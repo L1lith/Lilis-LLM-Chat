@@ -39,7 +39,7 @@ export default function Settings(props) {
         <nav class="links">
           <ul>
             <li>
-              <button onClick={() => openLink("https://webslc.com/download-llm-chat-latest")}>
+              <button onClick={() => latestVersion() ? openLink("https://github.com/L1lith/Lilis-LLM-Chat/releases/tag/v" + latestVersion()) : null}>
                 Download Latest App Version
               </button>
             </li>
