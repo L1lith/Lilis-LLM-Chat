@@ -18,6 +18,7 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: lts/*
+          check-latest: true
 
       - name: Build/release Electron app
         uses: johannesjo/action-electron-builder@v1
