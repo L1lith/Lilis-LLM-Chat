@@ -38,6 +38,9 @@ export default function Chat() {
   const [modelChoices, setModelChoices] = createSignal(null);
   const [AIThinking, setAIThinking] = createSignal(false);
 
+  let messageSound
+  let errorSound
+
   createEffect(() => {
     if (currentAPI() && currentAPI !== "null") {
       openAIRequest(currentAPI(), "models.list")
@@ -59,10 +62,15 @@ export default function Chat() {
       "error",
       5000
     );
+    if (db.enableSoundEffects !== false) messageSound.play();
     saveError(error).catch(console.error);
   };
 
   onMount(() => {
+    messageSound = new Audio('./sounds/decline.wav');
+    messageSound.volume = 0.4
+    errorSound = new Audio('./sounds/error.wav')
+    errorSound.volume = 0.8
     syncToJSON(db, "lilis-llm-chat-config-private.json")
       .then((dbReady) => {
         setCurrentAPI(getStartingAPI());
@@ -179,6 +187,7 @@ export default function Chat() {
       return;
     }
     appendNewMessage({ from: "AI", content: AIResponse });
+    if (db.enableSoundEffects !== false) messageSound.play();
     setAwaitingResponse(false);
     autoFocus();
   };

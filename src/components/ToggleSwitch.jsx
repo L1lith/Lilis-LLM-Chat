@@ -2,7 +2,7 @@ import { createSignal, createEffect } from "solid-js"
 import "../styles/ToggleSwitch.scss"
 
 export default function ToggleSwitch(props){
-    const {activeByDefault=true, activeColor={}, baseWidth='5em', activeToggleID, toggleID, onToggle} = props
+    const {activeByDefault=true, activeColor={}, baseWidth='6em', activeToggleID, toggleID, onToggle} = props
     const [active, setActive] = createSignal(activeByDefault)
     const baseWidthCalculated = CSSNumericValue.parse(baseWidth)
 

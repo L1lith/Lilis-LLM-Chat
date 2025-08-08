@@ -5,6 +5,21 @@
   & > *:not(:first-child) {
     margin-top: 0.5em;
   }
+  .info {
+    margin-top: 1.5em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    .links {
+      margin-bottom: 1em;
+      ul {
+        list-style: none;
+        li {
+          margin-top: 0.5em;
+        }
+      }
+    }
+  }
   .api-picker {
     border: 0.2em dashed #ffffff3b;
     padding: 1em;
