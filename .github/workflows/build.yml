@@ -2,12 +2,12 @@ name: Build/release
 
 on: push
 
-env:
-  DEBUG: electron-builder
 
 jobs:
-  release:
-    runs-on: ${{ matrix.os }}
+  build:
+    runs-on: ${{ matrix.os }}    
+    env:
+      DEBUG: electron-builder
     timeout-minutes: 10
     strategy:
       matrix:
@@ -36,13 +36,14 @@ jobs:
         if: runner.os != 'Windows'
         run: cp -r node_modules app/
 
-      - name: Build/release Electron app
-        uses: johannesjo/action-electron-builder@v1
-        with:
-          # GitHub token, automatically provided to the action
-          # (No need to define this secret in the repo settings)
-          github_token: ${{ secrets.github_token }}
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
 
-          # If the commit is tagged with a version (e.g. "v1.0.0"),
-          # release the app after building
-          release: ${{ startsWith(github.ref, 'refs/tags/v') }}
+      - uses: johannesjo/action-electron-builder@v1
+        with:
+          github_token: ${{ secrets.github_token }}
+          release: true
