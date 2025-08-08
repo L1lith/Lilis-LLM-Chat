@@ -9,6 +9,9 @@ jobs:
     env:
       DEBUG: electron-builder
     timeout-minutes: 10
+    permissions:
+      contents: write
+      packages: write
     strategy:
       fail-fast: false
       matrix:
