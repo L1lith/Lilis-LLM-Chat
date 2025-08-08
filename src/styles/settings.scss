@@ -55,6 +55,9 @@
           margin-bottom: 0.5em;
           display: flex;
           justify-content: space-around;
+          button:not(:first-child) {
+            margin-left: 0.5em;
+          }
           .toggle-switch {
             margin: auto 0;
           }

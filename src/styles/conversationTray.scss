@@ -20,6 +20,15 @@
                     max-height: 1em;
                 }
             }
+            .controls {
+                button {
+                    margin-top: 0.5em;
+                    margin-bottom: 0.5em;
+                    &:not(:first-child) {
+                        margin-left: 0.5em;
+                    }
+                }
+            }
         }
     }
 }
