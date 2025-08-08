@@ -28,6 +28,13 @@ jobs:
         run: npm run build:web && node prepareElectronApp.js
 
       - name: Build and release Electron app
-        run: npm exec electron-builder --publish=always
+        run: |
+          if [ "${{ matrix.os }}" == "macos-latest" ]; then
+            npm exec electron-builder -- --mac --publish always
+          elif [ "${{ matrix.os }}" == "ubuntu-latest" ]; then
+            npm exec electron-builder -- --linux --publish always
+          elif [ "${{ matrix.os }}" == "windows-latest" ]; then
+            npm exec electron-builder -- --win --publish always
+          fi
         env:
           GH_TOKEN: ${{ secrets.github_token }}
