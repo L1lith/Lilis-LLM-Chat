@@ -2,6 +2,9 @@ name: Build/release
 
 on: push
 
+env:
+  DEBUG: electron-builder
+
 jobs:
   release:
     runs-on: ${{ matrix.os }}
