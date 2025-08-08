@@ -10,7 +10,9 @@ await rm(distFinalPath, { recursive: true, force: true });
 await rename(distOriginalPath, distFinalPath, { recursive: true });
 
 
-const newPkg = {name: pkg.name, version: pkg.version, dependencies: pkg.dependencies, main: 'main.js', type: 'commonjs', author: pkg.author, license: pkg.license, description: pkg.description}
+//const newPkg = {name: pkg.name, version: pkg.version, dependencies: pkg.dependencies, main: 'main.js', type: 'commonjs', author: pkg.author, license: pkg.license, description: pkg.description}
+const fullPkg = { ...pkg, main: 'main.js', type: 'commonjs' };
 const newPkgPath = join(appPath, 'package.json')
+await writeFile(newPkgPath, JSON.stringify(fullPkg, null, 2));
 
-writeFile(newPkgPath, JSON.stringify(newPkg))
+// awaut writeFile(newPkgPath, JSON.stringify(newPkg))
