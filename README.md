@@ -17,7 +17,7 @@ Download
 *   [Windows](https://github.com/L1lith/Lilis-LLM-Chat/releases/download/v1.1.0/lilis-llm-chat-setup-1.1.0.exe)
 *   [macOS](https://github.com/L1lith/Lilis-LLM-Chat/releases/download/v1.1.0/lilis-llm-chat-1.1.0.dmg)
 
-![](images/lilis-llm-ui-preview.jpg)
+![](https://github.com/L1lith/Lilis-LLM-Chat/blob/main/readme-assets/lilis-llm-ui-preview.JPG)
 
 Your app, your data.
 --------------------
@@ -32,10 +32,10 @@ My app doesn't give me any access to your data. Furthermore, you can use it with
 Also, my code is much sleeker than the competition. If you exclude non-code files (like svgs and JSON) my project comes out to ~1816 lines of code, compared to Open WebUI's ~193577 lines of code (according to codetabs.com). While my app doesn't have quite as many features, it's still fully functioning while using ~100x less code. This meticulous design at every step of the way enables me to provide you with a very finely tuned user experience.
 
 ### Lili's LLM Chat Size
-![](/images/lilis-llm-loc.jpg) 
+![](https://github.com/L1lith/Lilis-LLM-Chat/blob/main/readme-assets/lilis-llm-loc.JPG) 
 #### **- VS -**
 ### Open WebUI Size
-![](/images/open-webui-loc.jpg)
+![](https://github.com/L1lith/Lilis-LLM-Chat/blob/main/readme-assets/open-webui-loc.JPG)
 
 Links
 -----
