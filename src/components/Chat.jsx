@@ -62,7 +62,7 @@ export default function Chat() {
       "error",
       5000
     );
-    if (db.enableSoundEffects !== false) messageSound.play();
+    if (db.enableSoundEffects !== false) errorSound.play();
     saveError(error).catch(console.error);
   };
 
