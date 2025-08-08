@@ -28,14 +28,20 @@ jobs:
       - name: Build web app and prepare Electron app
         run: npm run build:web && node prepareElectronApp.js
 
-      - name: Build and release Electron app
-        run: |
-          if [ "${{ matrix.os }}" == "macos-latest" ]; then
-            npm exec electron-builder -- --mac --publish always
-          elif [ "${{ matrix.os }}" == "ubuntu-latest" ]; then
-            npm exec electron-builder -- --linux --publish always
-          elif [ "${{ matrix.os }}" == "windows-latest" ]; then
-            npm exec electron-builder -- --win --publish always
-          fi
+      - name: Build and release Electron app (macOS)
+        if: matrix.os == 'macos-latest'
+        run: npm exec electron-builder -- --mac --publish always
+        env:
+          GH_TOKEN: ${{ secrets.github_token }}
+
+      - name: Build and release Electron app (Linux)
+        if: matrix.os == 'ubuntu-latest'
+        run: npm exec electron-builder -- --linux --publish always
+        env:
+          GH_TOKEN: ${{ secrets.github_token }}
+
+      - name: Build and release Electron app (Windows)
+        if: matrix.os == 'windows-latest'
+        run: npm exec electron-builder -- --win --publish always
         env:
           GH_TOKEN: ${{ secrets.github_token }}
