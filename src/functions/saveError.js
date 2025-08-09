@@ -20,7 +20,7 @@ export default async function saveError(error) {
   }
 
   outputString += `\n\n~~~ Debug Info:\nOperating System: ${getPlatform()}\nApp Version: ${pkg.version}\nOccurred: ${Date.now()}`;
-  const filePath = join(
+  const filePath = await join(
     errorDirectory,
     format(new Date(), "MMM do, Y HH-mma - ") + randomUUID() + ".txt"
   );

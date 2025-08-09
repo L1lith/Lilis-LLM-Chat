@@ -34,10 +34,10 @@ export default function ConversationTray(props) {
     setMessages(conversation.messages)
     setActivePopup(null)
   }
-  const deleteConversation = conversation=>{
+  const deleteConversation = async conversation=>{
     if (activeConversation()?.id === conversation.id) setConversation(null)
     setConversations(sortConversations(conversations().filter(check => check.id !== conversation.id)))
-    const chatFile = join('chats', conversation.id + '.json')
+    const chatFile = await join('chats', conversation.id + '.json')
     rm(chatFile).catch(error => {
       console.error(error)
       saveError(error)
@@ -76,7 +76,7 @@ export default function ConversationTray(props) {
           <For each={conversations()}>{(conversation, i) => <tr class={"conversation" + (activeConversation()?.id === conversation.id ? ' active' : '')}>
                 <td>{editingConversationName() === conversation.id ? <><input onLoad={console.log} onKeyDown={e => onInputKeyDown(e, conversation)} placeholder="enter a name" ref={renameInput} class="naming"/><div class="finish-rename" onClick={()=>doRename(conversation)} innerHTML={Checkmark}></div></> : (<>{conversation.name || "Untitled"}<div class="rename" onClick={()=>setEditingConversationName(conversation.id)} innerHTML={Pen}></div></>)}</td>
                 <td>{timeAgo(conversation.lastActive || conversation.created)}</td>
-                <td>{format(new Date(conversation.created), 'MMM do, Y')}</td>
+                <td>{console.log(conversation.created) || format(new Date(conversation.created), 'MMM do, Y')}</td>
                 <td>{conversation.id.substring(0, 3)}...{conversation.id.substring(conversation.id.length - 3)}</td>
                 <td class="controls"><button onClick={()=>viewConversation(conversation)}>View</button><button onClick={()=>deleteConversation(conversation)}>Delete</button></td>
             </tr>}</For>
