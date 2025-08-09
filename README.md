@@ -2,7 +2,7 @@
 Why might my LLM chat app be perfect for you?  
 If you like any of these features then please consider giving it a chance:
 
-*   Easy to use & install
+*   Easy to use & 1 click install
 *   Free & Open Source
 *   Supports enhanced data privacy
 *   Beautiful UI

@@ -157,7 +157,7 @@ export default function Chat() {
     convo.lastActive = Date.now();
     setMessages(convo.messages);
     setConversation(convo);
-    saveConversation(convo);
+    saveConversation(convo).catch(handleError)
   };
 
   const handleSubmit = async (e) => {

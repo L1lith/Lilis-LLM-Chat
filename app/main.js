@@ -1,5 +1,5 @@
 const { BrowserWindow, app, ipcMain, session } = require("electron");
-const { autoUpdater } = require("electron-updater");
+//const { autoUpdater } = require("electron-updater");
 const { join, resolve, dirname } = require("path");
 const openURL = require("./openURL");
 const openExplorer = require("open-file-explorer");
@@ -53,10 +53,12 @@ ipcMain.handle("read-file", async (_, filename) => {
 
 // 💾 Write file (recursive)
 ipcMain.handle("write-file", async (_, filename, content) => {
+  if (typeof content != "string")
+    throw new Error("Expected file content to be a string");
   const filePath = resolveSafePath(filename);
   const dir = dirname(filePath);
   await fs.mkdir(dir, { recursive: true });
-  await fs.writeFile(filePath, content, "utf-8");
+  await fs.writeFile(filePath, content, "utf8");
   return true;
 });
 
@@ -170,9 +172,9 @@ app.whenReady().then(async () => {
   });
   await fs.mkdir(userDataDirectory, { recursive: true });
   createWindow();
-  autoUpdater.checkForUpdatesAndNotify();
+  //autoUpdater.checkForUpdatesAndNotify();
 });
 
-autoUpdater.on("error", (error) => {
-  console.error("There was an error updating the application:", error);
-});
+// autoUpdater.on("error", (error) => {
+//   console.error("There was an error updating the application:", error);
+// });

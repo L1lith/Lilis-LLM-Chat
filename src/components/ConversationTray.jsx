@@ -53,7 +53,7 @@ export default function ConversationTray(props) {
     const newName = renameInput.value.trim()
     if (!newName) return
     conversation.name = newName
-    saveConversation(conversation)
+    saveConversation(conversation).catch(console.error)
     setEditingConversationName(null)
   }
 
