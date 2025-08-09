@@ -28,35 +28,38 @@ jobs:
           PACKAGE_VERSION=$(jq -r .version package.json)
 
           if [ "$LATEST_RELEASE_VERSION" == "$PACKAGE_VERSION" ]; then
-            echo "Skipping build: package.json version ($PACKAGE_VERSION) matches latest release ($LATEST_RELEASE_VERSION)."
-            exit 1
+            echo "SKIPPING_BUILD=true" >> "$GITHUB_ENV"
           fi
         shell: bash
 
       - name: Install Node.js, NPM and Yarn
+        if: env.SKIPPING_BUILD != 'true'
         uses: actions/setup-node@v4
         with:
           node-version: lts/*
 
       - name: Install dependencies
+        if: env.SKIPPING_BUILD != 'true'
         run: npm install
+
       - name: Build web app and prepare Electron app
+        if: env.SKIPPING_BUILD != 'true'
         run: npm run build:web && node prepareElectronApp.js
 
       - name: Build and release Electron app (macOS)
-        if: matrix.os == 'macos-latest'
+        if: env.SKIPPING_BUILD != 'true' && matrix.os == 'macos-latest'
         run: npm exec electron-builder -- --mac --publish always
         env:
           GH_TOKEN: ${{ secrets.github_token }}
 
       - name: Build and release Electron app (Linux)
-        if: matrix.os == 'ubuntu-latest'
+        if: env.SKIPPING_BUILD != 'true' && matrix.os == 'ubuntu-latest'
         run: npm exec electron-builder -- --linux --publish always
         env:
           GH_TOKEN: ${{ secrets.github_token }}
 
       - name: Build and release Electron app (Windows)
-        if: matrix.os == 'windows-latest'
+        if: env.SKIPPING_BUILD != 'true' && matrix.os == 'windows-latest'
         run: npm exec electron-builder -- --win --publish=always
         env:
           GH_TOKEN: ${{ secrets.github_token }}
