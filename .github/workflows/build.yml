@@ -4,7 +4,31 @@ on: push
 
 
 jobs:
+  check_version:
+    runs-on: ubuntu-latest
+    outputs:
+      should_build: ${{ steps.check_version.outputs.should_build }}
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v4
+
+      - name: Check package version against latest release
+        id: check_version
+        run: |
+          LATEST_RELEASE_VERSION=$(curl -sL "https://api.github.com/repos/${{ github.repository }}/releases/latest" | jq -r .tag_name | sed 's/^v//')
+          PACKAGE_VERSION=$(jq -r .version package.json)
+          
+          if [ "$LATEST_RELEASE_VERSION" == "$PACKAGE_VERSION" ]; then
+            echo "Skipping build: package.json version ($PACKAGE_VERSION) matches latest release ($LATEST_RELEASE_VERSION)."
+            echo "should_build=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "New version detected ($PACKAGE_VERSION). Starting build."
+            echo "should_build=true" >> "$GITHUB_OUTPUT"
+          fi
+        shell: bash
   release:
+    needs: check_version
+    if: needs.check_version.outputs.should_build == 'true'
     runs-on: ${{ matrix.os }}    
     env:
       DEBUG: electron-builder
@@ -21,45 +45,31 @@ jobs:
       - name: Check out Git repository
         uses: actions/checkout@v4
 
-      - name: Check package version against latest release
-        id: check_version
-        run: |
-          LATEST_RELEASE_VERSION=$(curl -sL "https://api.github.com/repos/${{ github.repository }}/releases/latest" | jq -r .tag_name | sed 's/^v//')
-          PACKAGE_VERSION=$(jq -r .version package.json)
-
-          if [ "$LATEST_RELEASE_VERSION" == "$PACKAGE_VERSION" ]; then
-            echo "SKIPPING_BUILD=true" >> "$GITHUB_ENV"
-          fi
-        shell: bash
-
       - name: Install Node.js, NPM and Yarn
-        if: env.SKIPPING_BUILD != 'true'
         uses: actions/setup-node@v4
         with:
           node-version: lts/*
 
       - name: Install dependencies
-        if: env.SKIPPING_BUILD != 'true'
         run: npm install
 
       - name: Build web app and prepare Electron app
-        if: env.SKIPPING_BUILD != 'true'
         run: npm run build:web && node prepareElectronApp.js
 
       - name: Build and release Electron app (macOS)
-        if: env.SKIPPING_BUILD != 'true' && matrix.os == 'macos-latest'
+        if: matrix.os == 'macos-latest'
         run: npm exec electron-builder -- --mac --publish always
         env:
           GH_TOKEN: ${{ secrets.github_token }}
 
       - name: Build and release Electron app (Linux)
-        if: env.SKIPPING_BUILD != 'true' && matrix.os == 'ubuntu-latest'
+        if: matrix.os == 'ubuntu-latest'
         run: npm exec electron-builder -- --linux --publish always
         env:
           GH_TOKEN: ${{ secrets.github_token }}
 
       - name: Build and release Electron app (Windows)
-        if: env.SKIPPING_BUILD != 'true' && matrix.os == 'windows-latest'
+        if: matrix.os == 'windows-latest'
         run: npm exec electron-builder -- --win --publish=always
         env:
           GH_TOKEN: ${{ secrets.github_token }}
