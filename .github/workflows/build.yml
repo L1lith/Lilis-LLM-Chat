@@ -28,17 +28,10 @@ jobs:
           PACKAGE_VERSION=$(jq -r .version package.json)
 
           if [ "$LATEST_RELEASE_VERSION" == "$PACKAGE_VERSION" ]; then
-            echo "SKIPPING_BUILD=true" >> "$GITHUB_ENV"
             echo "Skipping build: package.json version ($PACKAGE_VERSION) matches latest release ($LATEST_RELEASE_VERSION)."
+            exit 1
           fi
         shell: bash
-        continue-on-error: true 
-        
-      - name: Skip build if version hasn't changed
-        if: env.SKIPPING_BUILD == 'true'
-        run: |
-          echo "Build skipped because package version has not changed. ✅"
-          exit 0
 
       - name: Install Node.js, NPM and Yarn
         uses: actions/setup-node@v4
