@@ -1,6 +1,6 @@
 import "../styles/modelPicker.scss";
 import Search from '../icons/search.svg?raw'
-import { createEffect, createSignal } from "solid-js";
+import { createEffect, createSignal, onCleanup, onMount } from "solid-js";
 
 function abbreviateContextLength(contextLength) {
   if (contextLength >= 1000000) {
@@ -22,10 +22,22 @@ export default function ModelPicker({ modelChoices, onModelSelect, currentModel}
       setFilteredModels(modelChoices())
     }
   })
-  const currentModelID = currentModel()?.id 
   let searchInput
+  let modelPicker
+  
+  const currentModelID = currentModel()?.id 
+  const focusListener = ()=>{
+    searchInput.focus()
+  }
+  onMount(()=>{
+    searchInput.focus()
+    window.addEventListener('focus', focusListener)
+  })
+  onCleanup(()=>{
+    window.removeEventListener('focus', focusListener)
+  })
   return (
-    <div class="model-picker">
+    <div ref={modelPicker} class="model-picker">
       <h1>Pick a model:</h1>
       <span class="search">
         <input ref={searchInput} onInput={e => setCurrentSearch(e.target.value)}/>
