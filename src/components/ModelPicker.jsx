@@ -23,7 +23,6 @@ export default function ModelPicker({ modelChoices, onModelSelect, currentModel}
     }
   })
   let searchInput
-  let modelPicker
   
   const currentModelID = currentModel()?.id 
   const focusListener = ()=>{
@@ -37,7 +36,7 @@ export default function ModelPicker({ modelChoices, onModelSelect, currentModel}
     window.removeEventListener('focus', focusListener)
   })
   return (
-    <div ref={modelPicker} class="model-picker">
+    <div class="model-picker">
       <h1>Pick a model:</h1>
       <span class="search">
         <input ref={searchInput} onInput={e => setCurrentSearch(e.target.value)}/>
