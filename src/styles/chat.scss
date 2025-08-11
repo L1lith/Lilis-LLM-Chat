@@ -94,6 +94,9 @@
         code {
           white-space: pre-wrap;
         }
+        li {
+          list-style-position: inside;
+        }
       }
       &.user {
         align-items: flex-start;
