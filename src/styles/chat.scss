@@ -97,6 +97,11 @@
         li {
           list-style-position: inside;
         }
+        pre {
+          background: #444444;
+          padding: 1em;
+          border-radius: 1em;
+        }
       }
       &.user {
         align-items: flex-start;
