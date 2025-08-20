@@ -21,10 +21,21 @@ Download
 
 Your app, your data.
 --------------------
-
-This app could be your chance to try out new AIs (be them better, more eco-friendly, or both). Big corporate AI companies like OpenAI (the creators of ChatGPT) not only want to own your data, but profit off of you being trapped in to their ecosystem! My app is designed so your interface and your data stays yours.  
   
-My app doesn't give me any access to your data. Furthermore, you can use it with any AI you want (as long as it has an API) so it always be will be there for you even when you wanna switch AIs. I love the freedom I get from being able to choose from any AI I want. There are so many options, including more eco friendly AIs or AIs that have better privacy policies. You can connect to your own AIs running locally by pairing it with LM Studio.
+Lili's LLM Studio stores all of your data on your local device, it doesn't give me any access to your data. Furthermore, you can use it with any AI you want (as long as it has an API) so it always be will be there for you even when you wanna switch AIs. I love the freedom I get from being able to choose from any AI I want. There are so many options, including more eco friendly AIs or AIs that have better privacy policies like those provided by [Together.ai](https://www.together.ai/) (not sponsored or affiliated) which I prefer to use. You can connect to your own AIs running locally by pairing it with LM Studio.
+
+This app could be your chance to try out new AIs (be them better, more eco-friendly, or both). Big corporate AI companies like OpenAI (the creators of ChatGPT) not only want to own your data, but profit off of you being trapped in to their ecosystem! My app is designed so your interface and your data stays yours. 
+
+
+Building
+--------
+If you'd like to build this app on your local device you can do so using the commands in the terminal of your choice, assuming you have nodejs and git installed:
+1. clone the repo `git clone https://github.com/L1lith/Lilis-LLM-Chat`
+2. cd into the directory `cd Lilis-LLM-Chat`
+3. install the npm dependencies `npm install`
+4. build the app `npm run build`
+
+The app will be build and available in the `dist-electron` subdirectory
 
 *Sleek.*
 ------
