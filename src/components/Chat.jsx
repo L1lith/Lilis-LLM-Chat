@@ -27,6 +27,7 @@ function getStartingAPI() {
 
 export default function Chat() {
   let input = null;
+  let inputValueCache = ''
   let submitButton = null;
   const [activePopup, setActivePopup] = createSignal(null);
   const [messages, setMessages] = createSignal([]);
@@ -41,6 +42,12 @@ export default function Chat() {
   let messageSound
   let errorSound
 
+
+  createEffect(()=>{
+    if (activePopup() === null) {
+      input.value = inputValueCache
+    }
+  })
   createEffect(() => {
     if (currentAPI() && currentAPI !== "null") {
       openAIRequest(currentAPI(), "models.list")
@@ -234,7 +241,9 @@ export default function Chat() {
     }
     //console.log('up', key, isShiftDown)
   };
-  const autoAdjustInputHeight = () => {
+  const onInput = () => {
+    inputValueCache = input.value
+    // Auto adjust input height
     input.style.height = "";
     input.style.height = `min(calc(${input.scrollHeight}px - 2em), 30vh)`;
   };
@@ -350,7 +359,7 @@ export default function Chat() {
               </button>
             </span>
             <textarea
-              onInput={autoAdjustInputHeight}
+              onInput={onInput}
               onKeyDown={handleKeyDown}
               onKeyUp={handleKeyUp}
               class="prompt"
