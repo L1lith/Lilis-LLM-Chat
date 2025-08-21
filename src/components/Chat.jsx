@@ -19,6 +19,7 @@ import { mkdir, randomUUID, openAIRequest, getLatestPackage } from "../functions
 import syncToJSON from "../functions/syncToJSON";
 import db from "../../database";
 import { openURL } from "../functions/fs";
+import getWindow from "../functions/getWindow";
 
 function getStartingAPI() {
   if (!db.currentAPI || db.currentAPI === "null") return null;
@@ -38,15 +39,59 @@ export default function Chat() {
   const [statusMessages, setStatusMessages] = createSignal([]);
   const [modelChoices, setModelChoices] = createSignal(null);
   const [AIThinking, setAIThinking] = createSignal(false);
+  const [files, setFiles] = createSignal([])
 
   let messageSound
   let errorSound
 
+  const ensureLogoTextDisplayedCorrectly = ()=>{
+    const logoTextEl = document.getElementById('logo-text')
+    if (!logoTextEl) return console.warn('Unable to identify the logo text element')
+    if (db.enableLogoText !== false) {
+      logoTextEl.style.removeProperty('display')
+    } else {
+      logoTextEl.style.display = 'none'
+    }
+  }
+
+  onMount(()=>{
+    db.on('enableLogoText', ensureLogoTextDisplayedCorrectly)
+  })
+
+  const dropListener = event => {
+      event.preventDefault();
+      console.log('droppable!')
+      if (activePopup() !== null) return // Don't allow uploading files while in popups
+      const file = event.dataTransfer.files[0]; // Just taking the first one
+     
+      if (files().some(sFile => sFile.path === file.path)) return // File already in memory
+      const fileObject = {
+        path: file.path,
+        name: file.name,
+        type: file.type
+      }
+      setFiles(files().concat([fileObject]))
+    }
+  const dragListener = e => e.preventDefault()
+
+  onMount(()=>{
+    console.log('found window?', getWindow())
+    if (getWindow()) {
+      document.addEventListener('drop', dropListener);
+      document.addEventListener('dragover', dragListener);
+    }
+  })
+  onCleanup(()=>{
+    if (getWindow()) {
+      document.removeEventListener('drop', dropListener);
+      document.removeEventListener('dragover', dragListener);
+    }
+  })
 
   createEffect(()=>{
     if (activePopup() === null) {
       input.value = inputValueCache // Load the last typed message back into the input field
-      input.focus() // Focus the typing field
+      autoFocus() // Focus the typing field
     }
   })
   createEffect(() => {
@@ -125,13 +170,13 @@ export default function Chat() {
     input.focus();
   };
   onMount(() => {
-    if (this?.window) {
+    if (getWindow()) {
       window.addEventListener("focus", autoFocus);
       autoFocus();
     }
   });
   onCleanup(() => {
-    if (this?.window) {
+    if (getWindow()) {
       window.removeEventListener("focus", autoFocus);
     }
   });
@@ -190,7 +235,8 @@ export default function Chat() {
       return handleError("You must select a model, click the robot");
     }
 
-    appendNewMessage({ from: "User", content: input.value });
+    appendNewMessage({ from: "User", content: input.value, files: files() });
+    setFiles([])
     input.value = "";
     autoAdjustInputHeight();
     setAwaitingResponse(true);
@@ -254,10 +300,12 @@ export default function Chat() {
   };
   const onInput = () => {
     inputValueCache = input.value
-    // Auto adjust input height
+    autoAdjustInputHeight()
+  };
+  const autoAdjustInputHeight = ()=>{
     input.style.height = "";
     input.style.height = `min(calc(${input.scrollHeight}px - 2em), 30vh)`;
-  };
+  }
   const renderPopup = () => {
     if (activePopup() === null) return;
     let currentPopupElement = null;
@@ -318,6 +366,7 @@ export default function Chat() {
   const resetChat = () => {
     setConversation(null);
     setMessages([]);
+    setFiles([])
   };
 
   return (

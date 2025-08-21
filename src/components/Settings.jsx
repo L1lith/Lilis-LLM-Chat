@@ -9,7 +9,7 @@ import ToggleSwitch from "./ToggleSwitch";
 import db from "../../database";
 
 export default function Settings(props) {
-  const { setCurrentAPI, currentAPI } = props;
+  const { setCurrentAPI, currentAPI} = props;
   const [latestVersion, setLatestVersion] = createSignal(null);
 
   onMount(() => {
@@ -32,6 +32,14 @@ export default function Settings(props) {
           activeByDefault={db.enableSoundEffects !== false}
           baseWidth="6em"
           onToggle={(active) => (db.enableSoundEffects = active)}
+        />
+      </div>
+      <div class="sound effects">
+        <h3>Enable the Logo text</h3>
+        <ToggleSwitch
+          activeByDefault={db.enableLogoText !== false}
+          baseWidth="6em"
+          onToggle={(active) => {db.enableLogoText = active}}
         />
       </div>
       <div class="info">
