@@ -54,7 +54,7 @@ export default function ModelPicker({ modelChoices, onModelSelect, currentModel}
     <div ref={modelPicker} class="model-picker">
       <h1>Pick a model:</h1>
       <span class="search">
-        <input ref={searchInput} onInput={e => {modelPicker.scrollTop = 0; setCurrentSearch(e.target.value)}} onFocusOut={()=>{searchInput.focus()}}/>
+        <input ref={searchInput} onInput={e => {setTimeout(()=>{modelPicker.scrollTop = 0}, 0); setCurrentSearch(e.target.value)}} onFocusOut={()=>{searchInput.focus()}}/>
           <div
             onClick={() => searchInput.focus()}
             class="icon"

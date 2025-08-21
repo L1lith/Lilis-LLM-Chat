@@ -44,8 +44,9 @@ export default function Chat() {
 
 
   createEffect(()=>{
-    if (activePopup() === null) { // Load the last typed message back into the input field
-      input.value = inputValueCache
+    if (activePopup() === null) {
+      input.value = inputValueCache // Load the last typed message back into the input field
+      input.focus() // Focus the typing field
     }
   })
   createEffect(() => {
