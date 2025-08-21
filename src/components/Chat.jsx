@@ -48,9 +48,13 @@ export default function Chat() {
     const logoTextEl = document.getElementById('logo-text')
     if (!logoTextEl) return console.warn('Unable to identify the logo text element')
     if (db.enableLogoText !== false) {
-      logoTextEl.style.removeProperty('display')
+      // We make it invisible and short so it will still take up some space to ensure
+      // the messages don't go underneath the settings and conversation tray icons
+      logoTextEl.style.removeProperty('opacity')
+      logoTextEl.style.removeProperty('height')
     } else {
-      logoTextEl.style.display = 'none'
+      logoTextEl.style.opacity = 0
+      logoTextEl.style.height = '1em'
     }
   }
 
