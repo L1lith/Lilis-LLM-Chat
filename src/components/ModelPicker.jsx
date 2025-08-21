@@ -23,6 +23,7 @@ export default function ModelPicker({ modelChoices, onModelSelect, currentModel}
     }
   })
   let searchInput
+  let modelPicker
   
   const currentModelID = currentModel()?.id 
   const focusListener = ()=>{
@@ -36,10 +37,10 @@ export default function ModelPicker({ modelChoices, onModelSelect, currentModel}
     window.removeEventListener('focus', focusListener)
   })
   return (
-    <div class="model-picker">
+    <div ref={modelPicker} class="model-picker">
       <h1>Pick a model:</h1>
       <span class="search">
-        <input ref={searchInput} onInput={e => setCurrentSearch(e.target.value)}/>
+        <input ref={searchInput} onInput={e => {modelPicker.scrollTop = 0; setCurrentSearch(e.target.value)}} onFocusOut={()=>{searchInput.focus()}}/>
           <div
             onClick={() => searchInput.focus()}
             class="icon"
