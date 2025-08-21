@@ -44,7 +44,7 @@ export default function Chat() {
 
 
   createEffect(()=>{
-    if (activePopup() === null) {
+    if (activePopup() === null) { // Load the last typed message back into the input field
       input.value = inputValueCache
     }
   })
@@ -53,6 +53,15 @@ export default function Chat() {
       openAIRequest(currentAPI(), "models.list")
         .then((data) => {
           setModelChoices(data.body.filter((model) => model.type === "chat"));
+          const {lastUsedModelID} = currentAPI()
+          if (lastUsedModelID) {
+            const matchedModel = modelChoices().find(model => model.id === lastUsedModelID)
+            if (matchedModel) {
+              setCurrentModel(matchedModel)
+            } else {
+              createStatusMessage("The last used model is not available currently.", 'info', 3000)
+            }
+          }
           console.log("got models", data.body);
         })
         .catch(handleError);
@@ -80,7 +89,8 @@ export default function Chat() {
     errorSound.volume = 0.8
     syncToJSON(db, "lilis-llm-chat-config-private.json")
       .then((dbReady) => {
-        setCurrentAPI(getStartingAPI());
+        const startingAPI = getStartingAPI()
+        setCurrentAPI(startingAPI);
       })
       .catch(handleError);
     document.addEventListener("click", (e) => {

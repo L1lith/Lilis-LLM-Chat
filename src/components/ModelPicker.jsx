@@ -1,6 +1,7 @@
 import "../styles/modelPicker.scss";
 import Search from '../icons/search.svg?raw'
 import { createEffect, createSignal, onCleanup, onMount } from "solid-js";
+import db from "../../database";
 
 function abbreviateContextLength(contextLength) {
   if (contextLength >= 1000000) {
@@ -16,6 +17,7 @@ export default function ModelPicker({ modelChoices, onModelSelect, currentModel}
   const [filteredModels, setFilteredModels] = createSignal(modelChoices())
 
   createEffect(()=>{
+    window.models = modelChoices()
     if (currentSearch().trim().length > 0) {
       setFilteredModels(modelChoices().filter(model => model.display_name.toLowerCase().trim().includes(currentSearch().trim().toLowerCase())))
     } else {
@@ -24,6 +26,18 @@ export default function ModelPicker({ modelChoices, onModelSelect, currentModel}
   })
   let searchInput
   let modelPicker
+
+  const setLastUsedModel = model => {
+    const newAPIs = [...db.APIs]
+    const currentAPI = newAPIs.find(api => api.id === db.currentAPI)
+    if (!currentAPI) throw new Error("Unable to find active API")
+    if (model?.id) {
+      currentAPI.lastUsedModelID = model?.id
+    } else {
+      delete currentAPI.lastUsedModelID
+    }
+    db.APIs = newAPIs // Trigger save
+  }
   
   const currentModelID = currentModel()?.id 
   const focusListener = ()=>{
@@ -56,7 +70,7 @@ export default function ModelPicker({ modelChoices, onModelSelect, currentModel}
           })}
         >
           {(model) => (
-            <li class={"model" + (currentModelID && currentModelID === model.id ? ' active' : '')} onClick={() => onModelSelect(model)}>{model.display_name}{model.context_length ? ', ' + abbreviateContextLength(model.context_length) + ' tokens' : ''}</li>
+            <li class={"model" + (currentModelID && currentModelID === model.id ? ' active' : '')} onClick={() => {setLastUsedModel(model); onModelSelect(model)}}>{model.display_name}{model.context_length ? ', ' + abbreviateContextLength(model.context_length) + ' tokens' : ''}</li>
           )}
         </For>
       </ul>
