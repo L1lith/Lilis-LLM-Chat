@@ -13,9 +13,9 @@ If you like any of these features then please consider giving it a chance:
 Download
 --------
 
-*   [Linux](https://github.com/L1lith/Lilis-LLM-Chat/releases/download/v1.1.0/lilis-llm-chat-1.1.0-x86_64.AppImage)
-*   [Windows](https://github.com/L1lith/Lilis-LLM-Chat/releases/download/v1.1.0/lilis-llm-chat-setup-1.1.0.exe)
-*   [macOS](https://github.com/L1lith/Lilis-LLM-Chat/releases/download/v1.1.0/lilis-llm-chat-1.1.0.dmg)
+*   [Linux](https://github.com/L1lith/Lilis-LLM-Chat/releases/download/v1.1.2/lilis-llm-chat-1.1.2-x86_64.AppImage)
+*   [Windows](https://github.com/L1lith/Lilis-LLM-Chat/releases/download/v1.1.2/lilis-llm-chat-setup-1.1.2.exe)
+*   [macOS](https://github.com/L1lith/Lilis-LLM-Chat/releases/download/v1.1.2/lilis-llm-chat-1.1.2.dmg)
 
 ![](https://github.com/L1lith/Lilis-LLM-Chat/blob/main/readme-assets/lilis-llm-ui-preview.JPG)
 
