@@ -173,6 +173,11 @@ export default function Chat() {
     if (activePopup() !== null) return;
     input.focus();
   };
+  const clearInput = ()=>{
+    input.value = ''
+    inputValueCache = ''
+  }
+
   onMount(() => {
     if (getWindow()) {
       window.addEventListener("focus", autoFocus);
@@ -241,7 +246,7 @@ export default function Chat() {
 
     appendNewMessage({ from: "User", content: input.value, files: files() });
     setFiles([])
-    input.value = "";
+    clearInput()
     autoAdjustInputHeight();
     setAwaitingResponse(true);
     let AIResponse;
@@ -432,7 +437,7 @@ export default function Chat() {
             />
             <span className="toolbar right">
               <button innerHTML={Send} ref={submitButton} type="submit" />
-              <button onClick={resetChat} innerHTML={Refresh}></button>
+              <button type="button" onClick={resetChat} innerHTML={Refresh}/>
             </span>
           </form>
         </>
