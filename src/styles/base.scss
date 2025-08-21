@@ -65,6 +65,8 @@ body {
   filter: drop-shadow(1vmin .5vmin .5vmin #8b83ffa8);
   width: 60vw;
   max-height: 15vh;
+  opacity: 100%;
+  //transition: opacity 1s ease, height 1s ease;
   svg {
     max-height: 100%;
   }
