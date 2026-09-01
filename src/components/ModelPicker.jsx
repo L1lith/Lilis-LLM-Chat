@@ -19,7 +19,7 @@ export default function ModelPicker({ modelChoices, onModelSelect, currentModel}
   createEffect(()=>{
     window.models = modelChoices()
     if (currentSearch().trim().length > 0) {
-      setFilteredModels(modelChoices().filter(model => model.display_name.toLowerCase().trim().includes(currentSearch().trim().toLowerCase())))
+      setFilteredModels(modelChoices().filter(model => (model.display_name || model.id).toLowerCase().trim().includes(currentSearch().trim().toLowerCase())))
     } else {
       setFilteredModels(modelChoices())
     }
@@ -64,13 +64,13 @@ export default function ModelPicker({ modelChoices, onModelSelect, currentModel}
       <ul>
         <For
           each={filteredModels().sort((a, b) => {
-            return a.display_name.localeCompare(b.display_name, "en", {
+            return (a.display_name || a.id).localeCompare((b.display_name || b.id), "en", {
               numeric: true,
             });
           })}
         >
           {(model) => (
-            <li class={"model" + (currentModelID && currentModelID === model.id ? ' active' : '')} onClick={() => {setLastUsedModel(model); onModelSelect(model)}}>{model.display_name}{model.context_length ? ', ' + abbreviateContextLength(model.context_length) + ' tokens' : ''}</li>
+            <li class={"model" + (currentModelID && currentModelID === model.id ? ' active' : '')} onClick={() => {setLastUsedModel(model); onModelSelect(model)}}>{model.display_name || model.id}{model.context_length ? ', ' + abbreviateContextLength(model.context_length) + ' tokens' : ''}</li>
           )}
         </For>
       </ul>

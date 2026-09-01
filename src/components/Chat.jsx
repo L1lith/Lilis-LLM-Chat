@@ -102,7 +102,8 @@ export default function Chat() {
     if (currentAPI() && currentAPI !== "null") {
       openAIRequest(currentAPI(), "models.list")
         .then((data) => {
-          setModelChoices(data.body.filter((model) => model.type === "chat"));
+          const choices = (Array.isArray(data.body) ? data.body : Array.isArray(data.body.data) ? data.body.data : [] /* Deepseek API Compatibility */).filter((model) => model.type === "chat" || !model.type)
+          setModelChoices(choices);
           const {lastUsedModelID} = currentAPI()
           if (lastUsedModelID) {
             const matchedModel = modelChoices().find(model => model.id === lastUsedModelID)

@@ -15,7 +15,7 @@ userDataDirectory = join(
     (platform == "darwin"
       ? HOME + "/Library/Preferences"
       : HOME + "/.local/share"),
-  "Lili's LLM Chat"
+  "Lili's LLM Chat",
 );
 
 function resolveSafePath(relativePath) {
@@ -124,7 +124,7 @@ ipcMain.handle(
           res();
         }
       });
-    })
+    }),
 );
 ipcMain.handle("open-url", (_, urlIn) => openURL(urlIn));
 ipcMain.handle("join", (_, ...args) => join(...args));
@@ -156,6 +156,7 @@ ipcMain.handle("openai-request", async (_event, apiConfig, method, ...args) => {
   }
 
   const result = await target.call(parent || openai, ...args);
+  console.log(result);
   return result;
 });
 
